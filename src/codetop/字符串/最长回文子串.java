@@ -1,13 +1,13 @@
-package codetop.字符串.最长回文子串;
+package codetop.字符串;
 
 /**
  * 回文的意思是正着念和倒着念一样，如：上海自来水来自海上
  */
-public class Test {
+public class 最长回文子串 {
 
     public static void main(String[] args) {
-        Test test = new Test();
-        System.out.printf("结果：%s\n", test.longestPalindrome("acccacbbbcab"));
+        最长回文子串 最长回文子串 = new 最长回文子串();
+        System.out.printf("结果：%s\n", 最长回文子串.longestPalindrome("acccacbbbcab"));
     }
 
     public String longestPalindrome(String s) {
