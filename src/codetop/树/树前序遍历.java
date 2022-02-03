@@ -1,9 +1,9 @@
-package codetop.树.树转数组;
+package codetop.树;
 
 /**
  * @Description
  * @Author spli
  * @Date 2022/1/26 09:23
  */
-public class 树层序遍历 {
+public class 树前序遍历 {
 }

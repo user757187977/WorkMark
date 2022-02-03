@@ -1,4 +1,4 @@
-package codetop.链表.环形链表;
+package codetop.链表;
 
 /**
  * @Description

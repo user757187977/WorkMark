@@ -1,4 +1,4 @@
-package codetop.链表.相交链表;
+package codetop.链表;
 
 
 import 数据结构.ListNode;
