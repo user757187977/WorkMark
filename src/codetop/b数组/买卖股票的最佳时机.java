@@ -1,4 +1,4 @@
-package codetop.数组;
+package codetop.b数组;
 
 /**
  * 输入：[7,1,5,3,6,4]
