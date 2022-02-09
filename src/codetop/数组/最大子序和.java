@@ -8,7 +8,7 @@ package codetop.数组;
  * 输出：6
  * 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
  */
-public class 最大子序集合2 {
+public class 最大子序和 {
 
     public static int maxSubArray(int[] nums) {
         int res = nums[0];
