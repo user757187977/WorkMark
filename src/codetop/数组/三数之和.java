@@ -2,68 +2,52 @@ package codetop.数组;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 /**
- * @Description 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ? 找出所有和为 0 且不重复的三元组。
- * @LeetCodeURL https://leetcode-cn.com/problems/3sum/
- * @Author spli
- * @Date 2021/5/28 10:16 上午
+ * 给你一个包含 n 个整数的数组, 判断这个数组中是否存在三个元素, 使得这三个元素相加 = 0
  * 输入：nums = [-1,0,1,2,-1,-4]
  * 输出：[[-1,-1,2],[-1,0,1]]
  */
 public class 三数之和 {
 
-    public static void main(String[] args) {
-        三数之和 test = new 三数之和();
-        int[] arr = new int[]{-1, 0, 1, 2, -1, -4};
-        //int[] arr = new int[]{-2,0,0,2,2};
-        System.out.println(test.threeSum(arr));
-    }
+    /**
+     * 先排序, 原数组: -1,0,1,2,-1,-4 -> 新数组: -4,-2,-1,-1,0,1,2
+     * 开始遍历, 第一个元素 -4, 我们只需要找后面两个数相加等于 4 的就可以了, 这时候借助双指针
+     * 这样从原来的三个数相加等于 0 变成了找两个数相加等于 4
+     * @return
+     */
+    public static List<List<Integer>> test(int[] nums) {// 总时间复杂度：O(n^2)
+        List<List<Integer>> ans = new ArrayList<>();
+        if (nums == null || nums.length <= 2) return ans;
 
-    public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> lists = new ArrayList<>();
-        Arrays.sort(nums);//排序{-4,-1,-1,0,1,2}
-        int len = nums.length;
-        for (int i = 0; i < len; ++i) {
-            if (nums[i] > 0) {
-                break;
-            }
-            if (i > 0 && nums[i] == nums[i - 1]) {
-                continue;
-            }
-            int curr = nums[i];
-            int L = i + 1, R = len - 1;
-            while (L < R) {
-                int tmp = curr + nums[L] + nums[R];
-                if (tmp == 0) {
-                    List<Integer> list = new ArrayList<>();
-                    list.add(curr);
-                    list.add(nums[L]);
-                    list.add(nums[R]);
-                    lists.add(list);
-                    ++L;
-                    --R;
-                } else if (tmp < 0) {
-                    ++L;
-                } else {
-                    --R;
+        Arrays.sort(nums); // O(nlogn)
+
+        for (int i = 0; i < nums.length - 2; i++) { // O(n^2)
+            if (nums[i] > 0) break; // 第一个数大于 0，后面的数都比它大，肯定不成立了
+            if (i > 0 && nums[i] == nums[i - 1]) continue; // 去掉重复情况
+            int target = -nums[i];
+            int left = i + 1, right = nums.length - 1;
+            while (left < right) {
+                if (nums[left] + nums[right] == target) {
+                    ans.add(new ArrayList<>(Arrays.asList(nums[i], nums[left], nums[right])));
+
+                    // 现在要增加 left，减小 right，但是不能重复，比如: [-2, -1, -1, -1, 3, 3, 3], i = -2, left = 1, right = 6, [-2, -1, 3] 的答案加入后，需要排除重复的 -1 和 3
+                    left++; right--; // 首先无论如何先要进行加减操作
+                    while (left < right && nums[left] == nums[left - 1]) left++;
+                    while (left < right && nums[right] == nums[right + 1]) right--;
+                } else if (nums[left] + nums[right] < target) {
+                    left++;
+                } else {  // nums[left] + nums[right] > target
+                    right--;
                 }
             }
         }
-        //用于处理去重
-        List<List<Integer>> result = new ArrayList<>();
-        HashMap<String, String> hashMap = new HashMap<>();
-        for (List<Integer> integers : lists) {
-            String key = integers.toString();
-            if (!hashMap.containsKey(key)) {
-                hashMap.put(key, "1");
-                result.add(integers);
-            }
-        }
-        return result;
+        return ans;
     }
 
+    public static void main(String[] args) {
+        test(new int[]{-1,0,1,2,-1,-4});
+    }
 
 }
