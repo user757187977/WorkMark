@@ -9,14 +9,28 @@ package codetop.b数组;
  * 直接遍历数组, 找到目标, 即可
  * 进阶: 要求时间复杂度 O(log n)
  * 其实这题的目的就是让你二分查找
+ * 思路: 把 [4,5,6,7,0,1,2] 二分, 其中必然有一个是有序的, 另外一个是部分有序,
+ * 然后有序部分用二分查找, 无序部分再一分二, 其中又会出现一个有序 另外一个部分有序, 一次类推
  */
 public class 搜索旋转排序数组 {
 
-    public static void test(int[] nums, int target) {
-
+    public static int test(int[] nums, int target, int left, int right) {
+        if (left <= right) {
+            int mid = (left + right) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] > target) {
+                test(nums, target, left, mid - 1);
+            } else if (nums[mid] < target) {
+                test(nums, target, mid + 1, right);
+            }
+        }
+        return -1;
     }
 
     public static void main(String[] args) {
-        test(new int[]{4, 5, 6, 7, 0, 1, 2}, 0);
+        int[] nums = new int[]{4, 5, 6, 7, 0, 1, 2};
+        System.out.println(test(nums, 0, 0, nums.length - 1));
     }
+
 }
