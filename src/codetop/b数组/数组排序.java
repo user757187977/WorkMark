@@ -20,7 +20,7 @@ public class 数组排序 {
     }
 
     public static void main(String[] args) {
-        int[] nums = new int[]{3, 1, 6, 2, 5, 4};
+        int[] nums = new int[]{4,3,2,1};
         charu(nums);
         System.out.println(nums);
     }
