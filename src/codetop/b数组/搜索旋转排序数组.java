@@ -18,20 +18,21 @@ public class 搜索旋转排序数组 {
         int right = nums.length - 1;
         while (left <= right) {
             int mid = (left + right) / 2;
-            int midValue = nums[mid];
-            int leftValue = nums[left];
-            int rightValue = nums[right];
-            if (midValue == target) {
+            int leftV = nums[left];
+            int rightV = nums[right];
+            int midV = nums[mid];
+            // 二分之后 先找到递增那边 判断递增的那边是否满足你的需求
+            if (midV == target) {
                 return mid;
-            } else if (midValue < rightValue) { // 先要知道你要扫的二分数组的左边还是右边
-                if (midValue < target && target <= rightValue) {
+            } else if (midV <= rightV) {
+                if (target > midV && target <= rightV) {
                     left = mid + 1;
                 } else {
-                    right = mid - 1;
+                    right = mid;
                 }
-            } else {
-                if (leftValue <= target && target < midValue) {
-                    right = mid - 1;
+            } else if (midV >= leftV) {
+                if (target >= leftV && target < midV) {
+                    right = mid;
                 } else {
                     left = mid + 1;
                 }

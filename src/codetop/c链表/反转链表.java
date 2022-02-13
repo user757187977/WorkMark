@@ -10,13 +10,13 @@ import 数据结构.ListNode;
 public class 反转链表 {
 
     public static ListNode fanzhuan(ListNode head) {
-        ListNode cur = head;
         ListNode pre = null;
-        while (cur != null) {
+        ListNode cur = head;
+        while (cur != null){
             ListNode next = cur.next;
             cur.next = pre;
-            pre      = cur;
-            cur      = next;
+            pre = cur;
+            cur = next;
         }
         return pre;
     }
