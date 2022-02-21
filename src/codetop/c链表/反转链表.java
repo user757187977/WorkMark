@@ -9,14 +9,14 @@ import 数据结构.ListNode;
  */
 public class 反转链表 {
 
-    public static ListNode fanzhuan(ListNode head) {
+    public static ListNode test(ListNode head) {
         ListNode pre = null;
         ListNode cur = head;
-        while (cur != null){
+        while (cur != null) {
             ListNode next = cur.next;
             cur.next = pre;
-            pre = cur;
-            cur = next;
+            pre      = cur;
+            cur      = next;
         }
         return pre;
     }
@@ -31,7 +31,7 @@ public class 反转链表 {
         listNode3.setNext(listNode4);
         listNode2.setNext(listNode3);
         listNode1.setNext(listNode2);
-        ListNode result = fanzhuan(listNode1);
+        ListNode result = test(listNode1);
         while (result != null) {
             System.out.println(result.getVal());
             result = result.next;
