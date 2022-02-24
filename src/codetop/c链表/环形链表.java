@@ -7,65 +7,57 @@ import java.util.Set;
 
 /**
  * @Description
- * @LeetCodeURL https://leetcode-cn.com/problems/linked-list-cycle/
  * @Author spli
- * @Date 2021/6/8 10:33 上午
+ * @Date 2022/2/21 22:56
  */
 public class 环形链表 {
 
     /**
-     * 可以借助 set 的情况
-     *
-     * @param head
-     * @return
+     * 借助 set.
      */
     public static boolean test(ListNode head) {
-        boolean       result = false;
-        Set<ListNode> set    = new HashSet<>();
+        Set<ListNode> check = new HashSet<>();
         while (head != null) {
-            if (set.contains(head)) {
+            if (check.contains(head)) {
                 return true;
+            } else {
+                check.add(head);
+                head = head.next;
             }
-            set.add(head);
-            head = head.next;
         }
-        return result;
+        return false;
     }
 
     /**
-     * 不让用 set 的情况, 快慢指针
-     * 慢指针从头开始每次移动两个, 慢指针从第二个开始每次移动一个,
-     *
-     * @param head
-     * @return
+     * 快慢指针.
      */
     public static boolean test2(ListNode head) {
-        if (head == null || head.next == null) {
-            return false;
-        }
         ListNode slow = head;
-        ListNode fast = head.next;
-        while (slow != fast) {
-            if (fast == null || fast.next == null) {
-                return false;
-            }
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
+            if (slow == fast) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     public static void main(String[] args) {
-        ListNode listNode1 = new ListNode(3);
-        ListNode listNode2 = new ListNode(2);
-        ListNode listNode3 = new ListNode(0);
-        ListNode listNode4 = new ListNode(-4);
-//        listNode4.setNext(listNode2);
-        listNode3.setNext(listNode4);
-        listNode2.setNext(listNode3);
-        listNode1.setNext(listNode2);
-        System.out.println(test(listNode1));
-
-        System.out.println(test2(listNode1));
+        ListNode l1 = new ListNode(1);
+        ListNode l2 = new ListNode(2);
+        ListNode l3 = new ListNode(3);
+        ListNode l4 = new ListNode(4);
+        ListNode l5 = new ListNode(5);
+        ListNode l6 = new ListNode(6);
+        l1.next = l2;
+        l2.next = l3;
+        l3.next = l4;
+        l4.next = l5;
+        l5.next = l6;
+        l6.next = l2;
+        System.out.println(test(l1));
+        System.out.println(test2(l1));
     }
 }
