@@ -2,9 +2,6 @@ package codetop.c链表;
 
 import 数据结构.ListNode;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * @Description
  * @Author spli
@@ -13,25 +10,9 @@ import java.util.Set;
 public class 环形链表 {
 
     /**
-     * 借助 set.
-     */
-    public static boolean test(ListNode head) {
-        Set<ListNode> check = new HashSet<>();
-        while (head != null) {
-            if (check.contains(head)) {
-                return true;
-            } else {
-                check.add(head);
-                head = head.next;
-            }
-        }
-        return false;
-    }
-
-    /**
      * 快慢指针.
      */
-    public static boolean test2(ListNode head) {
+    public static boolean test(ListNode head) {
         ListNode slow = head;
         ListNode fast = head;
         while (fast != null && fast.next != null) {
@@ -58,6 +39,5 @@ public class 环形链表 {
         l5.next = l6;
         l6.next = l2;
         System.out.println(test(l1));
-        System.out.println(test2(l1));
     }
 }

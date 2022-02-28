@@ -1,4 +1,4 @@
-package codetop.c链表;
+package codetop.c链表.合并;
 
 import 数据结构.ListNode;
 

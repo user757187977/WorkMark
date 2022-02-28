@@ -1,24 +1,19 @@
-package codetop.c链表;
+package codetop.c链表.删除;
 
 import 数据结构.ListNode;
 
 /**
- * @Description
+ * @Description leetcode 83
  * @Author spli
- * @Date 2022/2/3 10:26
+ * @Date 2022/2/24 09:37
+ * 输入: 1 -> 1 -> 2 -> 3 -> 3
+ * 输出: 1 -> 2 -> 3
+ * 解释: 重复的保留一个
  */
-public class 反转链表 {
+public class 删除排序链表中的重复元素 {
 
     public static ListNode test(ListNode head) {
-        ListNode pre = null;
-        ListNode cur = head;
-        while (cur != null) {
-            ListNode next = cur.next;
-            cur.next = pre;
-            pre      = cur;
-            cur      = next;
-        }
-        return pre;
+        return null;
     }
 
     public static void main(String[] args) {
@@ -33,8 +28,9 @@ public class 反转链表 {
         listNode1.setNext(listNode2);
         ListNode result = test(listNode1);
         while (result != null) {
-            System.out.println(result.getVal());
+            System.out.println(result.val);
             result = result.next;
         }
     }
+
 }
