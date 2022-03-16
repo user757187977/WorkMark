@@ -3,9 +3,9 @@ package 数据结构;
 //Definition for a binary tree node.
 public class TreeNode {
 
-    int val;
-    TreeNode left;
-    TreeNode right;
+    public int      val;
+    public TreeNode left;
+    public TreeNode right;
 
     public TreeNode() {
     }
@@ -15,8 +15,8 @@ public class TreeNode {
     }
 
     public TreeNode(int val, TreeNode left, TreeNode right) {
-        this.val = val;
-        this.left = left;
+        this.val   = val;
+        this.left  = left;
         this.right = right;
     }
 
