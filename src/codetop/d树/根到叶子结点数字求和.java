@@ -5,35 +5,34 @@ import 数据结构.TreeNode;
 /**
  * @Description
  * @Author spli
- * @Date 2022/3/4 09:37
- * https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/solution/er-cha-shu-zhong-de-zui-da-lu-jing-he-by-leetcode-/
+ * @Date 2022/3/16 09:59
+ * https://leetcode-cn.com/problems/sum-root-to-leaf-numbers/comments/
+ * 输入：root = [1,2,3]
+ * 输出：25
+ * 解释：
+ * 从根到叶子节点路径 1->2 代表数字 12
+ * 从根到叶子节点路径 1->3 代表数字 13
+ * 因此，数字总和 = 12 + 13 = 25
  */
-public class 二叉树的最大路径和 {
+public class 根到叶子结点数字求和 {
 
-    static int maxSum = Integer.MIN_VALUE;
+    static int result = 0;
 
     public static int test(TreeNode root) {
-        dfs(root);
-        return maxSum;
+        dfs(root, result);
+        return result;
     }
 
-    public static int dfs(TreeNode root) {
+    public static void dfs(TreeNode root, int val) {
         if (root == null) {
-            return 0;
+            return;
         }
-
-        //计算左边分支最大值，左边分支如果为负数还不如不选择
-        int leftMax = Math.max(dfs(root.left), 0);
-        //计算右边分支最大值，右边分支如果为负数还不如不选择
-        int rightMax = Math.max(dfs(root.right), 0);
-        //left->root->right 作为路径与已经计算过历史最大值做比较
-        int priceNewpath = root.val + leftMax + rightMax;
-
-        // 更新答案
-        maxSum = Math.max(maxSum, priceNewpath);
-
-        // 返回节点的最大贡献值
-        return root.val + Math.max(leftMax, rightMax);
+        int k = (val * 10 + root.val);
+        if (root.left == null && root.right == null) {
+            result += k;
+        }
+        dfs(root.left, k);
+        dfs(root.right, k);
     }
 
     public static void main(String[] args) {
