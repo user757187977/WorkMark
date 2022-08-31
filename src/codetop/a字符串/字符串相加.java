@@ -11,21 +11,33 @@ package codetop.a字符串;
  */
 public class 字符串相加 {
 
-    public static String add(String num1, String num2) {
-        String[] arr    = new String[Math.max(num1.length(), num2.length())];
-        String   result = "";
-        int      length = Math.min(num1.length(), num2.length());
-        for (int i = length-1; length >= 0; length--) {
-            int temp = Integer.parseInt(String.valueOf(num1.charAt(i))) +  Integer.parseInt(String.valueOf(num2.charAt(i)));
-            System.out.println(temp);
-//            temp % 10?
-
+    public static String addStrings(String num1, String num2) {
+        int i = num1.length() - 1;
+        int j = num2.length() - 1;
+        int add = 0;
+        StringBuilder ans = new StringBuilder();
+        while (i >= 0 || j >= 0 || add != 0) {
+            int x = 0;
+            if (i >= 0) {
+                x = num1.charAt(i) - '0';
+            }
+            int y = 0;
+            if (j >= 0) {
+                y = num2.charAt(j) - '0';
+            }
+            int result = x + y + add;
+            ans.append(result % 10);
+            add = result / 10;
+            i--;
+            j--;
         }
-        return result;
+        // 计算完以后的答案需要翻转过来
+        ans.reverse();
+        return ans.toString();
     }
 
     public static void main(String[] args) {
-        String result = add("11", "123");
+        String result = addStrings("456", "77");
         System.out.println(result);
     }
 }
