@@ -1,8 +1,0 @@
-
-a	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(šŠ£l
-t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ˆÁ¥“üÿÿÿÿ
-a
-java:S2259="DA "NullPointerException" could be thrown; "result" is nullable here.(ÕÙÓ8§£ÓÂô/
-M
-java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8³¼™”0
-U	java:S106="9Replace this use of System.out or System.err by a logger.(ÕÙÓ8®£ÓÂô/
