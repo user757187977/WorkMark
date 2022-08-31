@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @Description
+ * @Description https://leetcode.cn/problems/longest-substring-without-repeating-characters/
  * @Author spli
  * @Date 2022/1/31 10:55
  * 输入: s = "abcabcbb"
@@ -20,11 +20,11 @@ public class 无重复字符的最长子串 {
         if (null == s || "".equals(s)) {
             return null;
         }
-        Set<Character> check  = new HashSet<>();
-        int            length = s.length();
+        Set<Character> check = new HashSet<>();
+        int length = s.length();
         for (int i = 0; i < length; i++) {
-            StringBuilder temps  = new StringBuilder();
-            char          temp_i = s.charAt(i);
+            StringBuilder temps = new StringBuilder();
+            char temp_i = s.charAt(i);
             check.add(temp_i);
             temps.append(temp_i);
             for (int j = i + 1; j < length; j++) {
@@ -36,7 +36,7 @@ public class 无重复字符的最长子串 {
                     temps.append(temp_j);
                 }
             }
-            System.out.println(temps.toString());
+            System.out.println(temps);
             check.clear();
         }
         return result;
