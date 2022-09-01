@@ -3,7 +3,7 @@ package codetop.c链表.反转;
 import 数据结构.ListNode;
 
 /**
- * @Description
+ * @Description https://leetcode.cn/problems/reverse-linked-list/
  * @Author spli
  * @Date 2022/2/3 10:26
  */
