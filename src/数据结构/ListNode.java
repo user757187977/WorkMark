@@ -29,4 +29,15 @@ public class ListNode {
     public void setNext(ListNode next) {
         this.next = next;
     }
+
+    public static ListNode arr2List(int[] arr) {
+        ListNode head = new ListNode(arr[0]);
+        ListNode pre = head;
+        for (int i = 1; i < arr.length; i++) {
+            ListNode cur = new ListNode(arr[i]);
+            pre.next = cur;
+            pre = cur;
+        }
+        return head;
+    }
 }
