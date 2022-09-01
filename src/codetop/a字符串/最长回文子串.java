@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description 上海自来水来自海上 就是回文串
+ * @Description https://leetcode.cn/problems/longest-palindromic-substring/
  * @Author spli
  * @Date 2022/2/2 13:42
+ * 上海自来水来自海上 就是回文串
  * 咱们仍然先滑动窗口 得到 字符串中的每种子串, 然后我们从这个子串中间开始向左右移动, 左指针和右指针相等就可以
  */
 public class 最长回文子串 {
