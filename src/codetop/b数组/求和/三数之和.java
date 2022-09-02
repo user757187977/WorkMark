@@ -1,4 +1,4 @@
-package codetop.b数组;
+package codetop.b数组.求和;
 
 import java.util.ArrayList;
 import java.util.Arrays;

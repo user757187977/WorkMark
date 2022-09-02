@@ -1,4 +1,4 @@
-package codetop.b数组;
+package codetop.b数组.求和;
 
 /**
  * @Description https://leetcode.cn/problems/maximum-subarray/

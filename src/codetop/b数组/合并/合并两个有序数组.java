@@ -1,4 +1,4 @@
-package codetop.b数组;
+package codetop.b数组.合并;
 
 import java.util.Arrays;
 
