@@ -3,32 +3,39 @@ package codetop.c链表.合并;
 import 数据结构.ListNode;
 
 /**
- * @Description
+ * @Description https://leetcode.cn/problems/merge-two-sorted-lists/
  * @Author spli
  * @Date 2022/2/21 22:25
+ * 两个升序链表合成一个升序链表
  */
 public class 合并两个有序链表 {
 
-    public static ListNode test(ListNode l1, ListNode l2) {
-        ListNode result = new ListNode(0);
-        ListNode cur    = result;
+    public static ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        if (list1 == null) return list2;
+        if (list2 == null) return list1;
+        //创建虚拟头节点
+        ListNode head = new ListNode(-1);
+        ListNode p = head;
+        //双指针
+        ListNode l1 = list1;
+        ListNode l2 = list2;
+        //只要一个链表没有遍历完，就继续遍历
         while (l1 != null && l2 != null) {
-            if (l1.val < l2.val) {
-                cur.next = l1;
-                cur      = cur.next;
-                l1       = l1.next;
-            } else {
-                cur.next = l2;
-                cur      = cur.next;
-                l2       = l2.next;
+            //插值只有两种情况，
+            if (l1.val <= l2.val) {//插入第一个链表的值
+                p.next = new ListNode(l1.val);
+                l1 = l1.next;
+            } else {//插入第二个链表的值
+                p.next = new ListNode(l2.val);
+                l2 = l2.next;
             }
+            p = p.next;
         }
-        if (l1 == null) {
-            cur.next = l2;
-        } else {
-            cur.next = l1;
-        }
-        return result.next;
+        //如果有链表不为空，直接插在末尾
+        if (l1 != null) p.next = l1;
+        if (l2 != null) p.next = l2;
+        //返回虚拟头节点后面的节点
+        return head.next;
     }
 
     public static void main(String[] args) {
@@ -40,7 +47,7 @@ public class 合并两个有序链表 {
         ListNode listNode5 = new ListNode(3);
         listNode4.next = listNode5;
         listNode5.next = new ListNode(4);
-        ListNode result = test(listNode1, listNode4);
+        ListNode result = mergeTwoLists(listNode1, listNode4);
         while (result != null) {
             System.out.println(result.getVal());
             result = result.next;
