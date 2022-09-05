@@ -3,26 +3,24 @@ package codetop.c链表;
 import 数据结构.ListNode;
 
 /**
- * @Description https://leetcode.cn/problems/linked-list-cycle/
- * @Author spli
- * @Date 2022/2/21 22:56
+ * @Description
+ * @Author lishoupeng
+ * @Date 2022/9/5 08:58
  */
-public class 环形链表 {
+public class 环形链表2 {
 
-    /**
-     * 快慢指针.
-     */
-    public static boolean test(ListNode head) {
+    public static boolean hasCycle(ListNode head) {
+        if (head == null || head.next == null) return false;
         ListNode slow = head;
-        ListNode fast = head;
-        while (fast != null && fast.next != null) {
+        ListNode fast = head.next;
+        while (slow != fast) {
+            if (fast == null || fast.next == null) {
+                return false;
+            }
             slow = slow.next;
             fast = fast.next.next;
-            if (slow == fast) {
-                return true;
-            }
         }
-        return false;
+        return true;
     }
 
     public static void main(String[] args) {
@@ -38,6 +36,6 @@ public class 环形链表 {
         l4.next = l5;
         l5.next = l6;
         l6.next = l2;
-        System.out.println(test(l1));
+        System.out.println(hasCycle(l1));
     }
 }
