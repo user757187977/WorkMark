@@ -40,4 +40,16 @@ public class ListNode {
         }
         return head;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(this.val);
+        ListNode listNode = this;
+        while (listNode.next != null) {
+            stringBuilder.append(listNode.val);
+            listNode = listNode.next;
+        }
+        return stringBuilder.toString();
+    }
 }
