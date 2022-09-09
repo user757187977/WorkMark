@@ -8,18 +8,16 @@ package codetop.b数组;
 public class 数组中的第K个最大元素2 {
 
     public static int findKthLargest(int[] nums, int k) {
-        int asw = 0;
+        int asw = nums[0];
         for (int i = 0; i < k; i++) {
-            int cur = nums[0];
             int j_temp = 0;
             for (int j = 0; j < nums.length; j++) {
-                if (nums[j] > cur) {
-                    cur = nums[j];
+                if (nums[j] > asw) {
+                    asw = nums[j];
                     j_temp = j;
                 }
             }
             nums[j_temp] = Integer.MIN_VALUE;
-            asw = cur;
         }
         return asw;
     }
