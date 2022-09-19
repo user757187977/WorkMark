@@ -77,4 +77,10 @@ class IoThread extends Thread {
 
 对于 Redis 来说, 由于是 Redis 是串行的, 能够保证同一连接的所有请求与返回顺序一致, 这样可以使用单线程+队列, 把请求数据缓存, 然后 pipeline 发送, 返回 future, 然后 channel 可读时, 直接把队列中的 future 取回来
 
-
+最后总结一下 NIO 的特点:
+* 事件驱动模型
+* 避免多线程
+* 单线程处理多任务
+* 读写不阻塞
+* 高级 IO 函数, zero-copy
+* IO 多路复用
