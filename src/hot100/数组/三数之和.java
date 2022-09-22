@@ -17,7 +17,7 @@ public class 三数之和 {
         List<List<Integer>> asw = new ArrayList<>();
         Arrays.sort(nums);
         for (int i = 0; i < nums.length - 2; i++) {
-            int target = -nums[i];
+            int target = 0 - nums[i];
             int left = i + 1;
             int right = nums.length - 1;
             while (left < right) {
@@ -25,8 +25,6 @@ public class 三数之和 {
                     asw.add(new ArrayList<>(Arrays.asList(nums[i], nums[left], nums[right])));
                     left++;
                     right--;
-                    while (left < right && nums[left] == nums[left - 1]) left++;
-                    while (left < right && nums[right] == nums[right + 1]) right--;
                 } else if (nums[left] + nums[right] < target) {
                     left++;
                 } else {
