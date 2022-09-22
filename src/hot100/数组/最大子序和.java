@@ -5,7 +5,7 @@ package hot100.数组;
  * @Author lishoupeng
  * @Date 2022/9/19 08:32
  */
-public class 最大自序和 {
+public class 最大子序和 {
 
     public static int maxSubArray(int[] nums) {
         int pre = nums[0];
