@@ -116,7 +116,7 @@ getExclusiveOwnerThread（）），如果是当前线程，直接给state加1，
 
 ### ThreadLocal
 
-1. ThreadLocal 是用于线程之间的数据隔离的场景, 每个线程内有个 ThreadLocalMap, 这个 map 以 ThreadLocal 实例作为 key, 来保存当前线程下用户需要的数据;
+1. ThreadLocal 是用于线程之间的数据隔离的场景, 每个线程都有 ThreadLocalMap 属性, 这个 map 以 ThreadLocal 实例作为 key, 来保存当前线程下用户需要的数据;
     1. 比如线程不安全的 SimpleDateFormat, spring mvc 也是把每次请求封装到 ThreadLocal 中.
     2. 打点 K8s 的每次请求耗时, 这个过程是利用 AOP 实现的, 切面中定义了 ThreadLocal 来保存每次调用的开始时间, 调用之后, 当前时间 - ThreadLocal get 的时间, 得到一次调用的耗时.
 2. 使用起来主要 3 个方法, set get remove
