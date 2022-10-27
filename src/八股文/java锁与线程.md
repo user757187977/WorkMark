@@ -127,9 +127,9 @@ tryacquire), 获取锁失败之后就需要加入到等待队列(addwaiter)
 
 ### CountdownLatch CyclicBarrier Semaphore
 
-1. CountdownLatch: 定义多少个线程执行完成之后共同执行一个方法
-2. CyclicBarrier:
-3. Semaphore: 信号量, 控制并发多少个线程的,
+1. CountdownLatch: 是一个递减的计数器.
+2. CyclicBarrier: 可循环的屏障, 是一个增加的过程, 线程完成逐渐到达屏障. 之后执行某个方法.
+3. Semaphore: 信号量, 控制并发多少个线程的.
 
 ### ThreadLocal
 

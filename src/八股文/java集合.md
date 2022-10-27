@@ -31,4 +31,20 @@
             1. 锁已经足够细了, 基本不可能发生
             2. Synchronized 优化也足够好了
 
-### ArrayList, LinkedList的区别
+### java 常见的集合与数据结构
+
+* List 接口:
+    * ArrayList: 动态数组
+    * LinkedList: 双向链表
+    * Vector: 与 ArrayList 类似, 线程安全
+    * Stack: 栈, 先进后出
+* Set 接口: 不可重复
+    * HashSet: 以 HashCode 实现的无重复数据
+    * TreeSet: 基于 TreeMap, 生成的是一个总是排序的 set, 可以自己指定排序实现.
+* Map 接口:
+    * HashMap: 数组+链表
+    * TreeMap: 内部红黑树
+    * HashTable: 线程安全
+* Queue:
+    * 阻塞队列
+    * 双端队列

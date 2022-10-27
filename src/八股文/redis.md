@@ -5,30 +5,42 @@
 
 ## 基于内存
 
-![img.png](images/redis_img.png)
+![img.png](images/redis/redis_img.png)
+
+## 数据类型
+
+1. String
+2. List: 消息队列, 列表场景
+3. Set
+4. Hash
+5. SortedSet
 
 ## 数据结构
 
-`5 种数据类型, String List Set Hash SortedSet`
-不同的数据类型都有多种数据结构的支持, 就是为了快. 注意: 数据类型与数据结构不一样!!! 别混了.
-![img_2.png](images/redis_img_2.png)
+**⚠️⚠️⚠️ 写在最前, 数据结构不同于数据类型, 在 Redis 中, 这些数据类型的实现是由多重数据结构组合完成的, 不要把结构和类型混为一谈**
+![img_1.png](images/redis/img_1.png)
+`基本上我们就是 9 种数据结构, SDS zpiList quickList linkedList hash...`
 
-1. SDS 简单动态字符串
-    1. ![img_1.png](images/redis_img_1.png)
+1. String: SDS 简单动态字符串
+    1. ![img.png](images/redis/img.png)
     2. 除了字符串本身, 还保存了额外信息, 比如 len, free
     3. 空间预分配, SDS 被修改后, 除了分配必须空间, 还会分配额外空间
     4. 惰性空间释放, 对 SDS 缩短, 并不会回收多余的内存, 而是使用 free 来保存这些空间不释放, 之后如果 append 则直接使用 free 中的空间
-    5. 两种编码格式, embstr 编码, raw 编码, 默认使用 embstr 为了占用连续内存.
-2. zipList
-    1. 是 list hash sortedSet 类型的底层实现结构之一.
-    2. 数据量较小, 或者单条数据长度较小 时使用.
-3. quickList
-    1. ![img_3.png](images/redis_img_3.png)
-    2. 是 zipList + linkedList 的合体
-4. skipList 跳表
-    1. ![img_4.png](images/redis_img_4.png)
+    5. 两种编码格式, embStr/raw 编码, 根据字符串长度选择, 默认使用 embStr 为了占用连续内存.
+2. zipList:
+    1. 本质是通过字节数组实现的, 为什么用数组实现链表? 是因为我们一般实现链表都会使用到指针, 这样会占据额外的内存空间, 引起内存碎片, 所以使用数组占用完整的一块内存.
+    2. 缺点就是担心连锁更新的可能. 所以适用于少量数据的场景.
+    3. 是 list hash sortedSet 类型的底层实现结构之一.
+3. zipList 之后的升级: quickList 和 listPack
+    1. quickList
+    2. ![img_3.png](images/redis/redis_img_3.png)
+    3. 是 zipList + linkedList 的合体
+4. 哈希表
+5. skipList 跳表, 为了时间复杂度: O(logN)
+    1. ![img_4.png](images/redis/redis_img_4.png)
     2. 有序 层级的数据结构, 增加多层级索引, 通过索引位置的几次跳转, 实现数据的快速定位
     3. 比如 12345, 第一层保存 1, 第二层保存 134, 第三层保存 12345, 然后每个节点都保存着相邻的指针
+    4. 同时, 各个节点之间, 保存了一个属性, 叫 跨度. 来保存节点之间的距离.
 
 ## 单线程模型
 
@@ -56,11 +68,11 @@ epoll 模型是基于事件驱动, 利用多路复用的特性, 减少在等待 
 
 ## 数据清理策略
 
-1. 惰性删除(获取时候判断是否需要删除) + 定时删除
+1. 惰性删除(获取时候判断是否需要删除)(主要目标是节省 CPU 资源, 因为是单线程的, 但是非常浪费内存) + 定时删除(解决惰性删除浪费内存的问题)
 
 ## 淘汰机制
 
-1. 一共 8 总可以聚合分为 4 种, LRU(最少使用) 最小频率 随机 TTL
+1. 一共 8 种可以聚合分为 4 种, LRU(最少使用) 最小频率 随机 TTL
 
 ## 分布式锁
 
@@ -71,7 +83,8 @@ epoll 模型是基于事件驱动, 利用多路复用的特性, 减少在等待 
     1. setNx
     2. expire key
     3. delete key
-    4. 后来 redis 也有新的命令, set key value ex px nx, ex: expire, nx: notExist, xx:existExist, 就是把一堆 set 命令变成了一次 pipeline 操作
+    4. 后来 redis 也有新的命令, set key value ex px nx, ex: expire, px: 毫秒 nx: 键 notExist 时存入, xx: 键 existExist 时存入, 就是把一堆 set
+       命令变成了一次 pipeline 操作
     5. 至于 什么 lua 脚本的, 就扯淡了, 建议直接换 zookeeper 或者 etcd
 
 ## 雪崩 穿透 击穿
