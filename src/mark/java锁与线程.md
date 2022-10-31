@@ -85,8 +85,8 @@ tryacquire), 获取锁失败之后就需要加入到等待队列(addwaiter)
 
 ### ReentrantLock
 
-是可重入锁, 也是AQS的具体实现方式 if(current == getExclusiveOwnerThread()), 如果是当前线程, 直接给state加1, 这个state加1是什么意思呢,
-就是tryacquire都是围绕state进行的, 当然可以不使用+1的形式, 比如使用ABC, 那么AQS在判断状态的时候就去处理ABC, 用什么都可以, 就是一个队列状态的判断. 公平锁与非公平锁的区别, 就是公平锁是排队的形式,
+是可重入锁, 也是 AQS 的具体实现方式 if(current == getExclusiveOwnerThread()), 如果是当前线程, 直接给state加1, 这个state加1是什么意思呢, 就是 tryAcquire
+都是围绕state进行的, 当然可以不使用+1的形式, 比如使用ABC, 那么AQS在判断状态的时候就去处理ABC, 用什么都可以, 就是一个队列状态的判断. 公平锁与非公平锁的区别, 就是公平锁是排队的形式,
 如果有等待队列就排队到AQS队列中, 没有队列就直接尝试获取锁 非公平锁是上来就CAS操作state.
 
 ### synchronized 与 Lock 的区别
@@ -117,7 +117,7 @@ tryacquire), 获取锁失败之后就需要加入到等待队列(addwaiter)
     2. DiscardPolicy(直接丢弃任务)
     3. DiscardOldestPolicy(丢弃队列里最老的任务, 将当前这个任务继续提交给线程池)
     4. CallerRunsPolicy(交给线程池调用所在的线程进行处理)
-5. 为什么阿里推荐使用 Threadpool...
+5. 为什么阿里推荐使用 ThreadPool...
     1.
    newFixedThreadPool: corePoolSize和maximumPoolSize相同, keepAliveTime也就无意义了, 所以设置为0L. 这个线程池使用的是LinkedBlockingQueue(无界队列)
    来存corePoolSize线程无法处理的任务. 那么这个线程池问题在哪里呢？最大的问题在于workQueue使用了无界队列, 当任务数多到线程池处理不过来时, 任务全部进入workQueue, 会消耗很大的内存, 甚至OOM.
@@ -164,6 +164,3 @@ tryacquire), 获取锁失败之后就需要加入到等待队列(addwaiter)
 3. yield: 暂停当前正在执行的线程对象, 把执行机会让给更高优先级的线程.
 4. join: 在当前线程中调用 join, 则当前线程进入阻塞, 直到另一个线程运行结束, 当前线程重新为就绪状态
 5. notify/All: 唤醒等待当前对象锁的 一个/全部 线程
-
-
-
