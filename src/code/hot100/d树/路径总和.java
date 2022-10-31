@@ -1,4 +1,4 @@
-package code.hot100.树;
+package code.hot100.d树;
 
 import code.数据结构.TreeNode;
 

@@ -1,4 +1,4 @@
-package code.hot100.链表;
+package code.hot100.c链表;
 
 /**
  * @Description

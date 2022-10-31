@@ -1,4 +1,4 @@
-package code.hot100.数组;
+package code.hot100.b数组;
 
 /**
  * @Description https://leetcode.cn/problems/maximum-subarray/comments/
