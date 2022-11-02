@@ -17,37 +17,33 @@ public class 合并两个有序链表 {
         while (l1 != null && l2 != null) {
             if (l1.val < l2.val) {
                 cur.next = l1;
-                cur = cur.next;
                 l1 = l1.next;
             } else {
                 cur.next = l2;
-                cur = cur.next;
                 l2 = l2.next;
             }
+            cur = cur.next;
         }
-        // 任一为空，直接连接另一条链表
-        if (l1 == null) {
-            cur.next = l2;
-        } else {
-            cur.next = l1;
-        }
+        if (l1 == null) cur.next = l2;
+        if (l2 == null) cur.next = l1;
         return dummy.next;
     }
 
     public static void main(String[] args) {
         ListNode listNode1 = new ListNode(1);
-        ListNode listNode2 = new ListNode(3);
-        ListNode listNode3 = new ListNode(5);
-        ListNode listNode7 = new ListNode(10);
-        listNode1.next = listNode2;
-        listNode2.next = listNode3;
-        listNode3.next = listNode7;
-        ListNode listNode4 = new ListNode(2);
-        ListNode listNode5 = new ListNode(4);
+        ListNode listNode3 = new ListNode(3);
+        ListNode listNode5 = new ListNode(5);
+        listNode1.next = listNode3;
+        listNode3.next = listNode5;
+        ListNode listNode2 = new ListNode(2);
+        ListNode listNode4 = new ListNode(4);
         ListNode listNode6 = new ListNode(6);
-        listNode4.next = listNode5;
-        listNode5.next = listNode6;
-        ListNode result = mergeTwoLists(listNode1, listNode4);
+        ListNode listNode7 = new ListNode(7);
+        listNode2.next = listNode4;
+        listNode4.next = listNode6;
+        listNode6.next = listNode7;
+        ListNode listNode = mergeTwoLists(listNode1, listNode2);
+        System.out.println(listNode);
     }
 
 }
