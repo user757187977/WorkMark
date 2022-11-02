@@ -12,8 +12,8 @@ import code.数据结构.ListNode;
 public class 合并两个有序链表 {
 
     public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-        ListNode asw = new ListNode(0);
-        ListNode cur = asw;
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
         while (l1 != null && l2 != null) {
             if (l1.val < l2.val) {
                 cur.next = l1;
@@ -31,7 +31,7 @@ public class 合并两个有序链表 {
         } else {
             cur.next = l1;
         }
-        return asw.next;
+        return dummy.next;
     }
 
     public static void main(String[] args) {
