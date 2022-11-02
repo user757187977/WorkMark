@@ -13,31 +13,16 @@ import code.数据结构.ListNode;
 public class 删除倒数第N个元素 {
 
     public static ListNode removeNthFromEnd(ListNode head, int n) {
-        // 定义虚拟头节点, 使用 .next 返回最后的结果
         ListNode virtual = new ListNode(0);
         virtual.next = head;
-
-        // 定义快慢指针
-        ListNode fast = virtual;
-        ListNode slow = virtual;
-        for (int i = 0; i < n; i++) {
-            fast = fast.next;
-        }
-
-        //只要快指针不指向空，就继续循环
+        ListNode fast = head;
+        ListNode slow = head;
+        for (int i = 0; i < n; i++) fast = fast.next;
         while (fast.next != null) {
-            //让快慢指针同时移动
-            slow = slow.next;
-            fast = fast.next;
+            slow = slow.next; fast = fast.next;
         }
-
-        //这时慢指针移动到的位置就是，要删除节点的前一个节点
-        //所以只要删除当前节点的下一个节点
         slow.next = slow.next.next;
-
-        //返回为指针指向的头节点
         return virtual.next;
-
     }
 
     public static void main(String[] args) {

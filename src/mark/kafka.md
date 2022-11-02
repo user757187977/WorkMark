@@ -18,7 +18,7 @@
           leader.
         - 关于上面提到的 _跟得上_ 的解释: 距离上次 FetchRequest 的时间小于阈值, 或者落后的数据大于阈值. 说白了就是: 最近有同步数据的操作.
             - replica.lag.time.max.ms=10000 # 如果 leader 发现 follower 超过10秒没有向它发起 fetch 请求，就从 ISR 列表剔除
-            - replica.lag.max.messages=4000 # 相差4000条就移除
+            - replica.lag.max.messages=4000 # 相差 4000 条就移除
 
 - 总结:
     - producer ack = -1
