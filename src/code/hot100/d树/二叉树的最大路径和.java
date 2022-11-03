@@ -11,17 +11,12 @@ public class 二叉树的最大路径和 {
 
     static int maxSum = Integer.MIN_VALUE;
 
-    public static int maxPathSum(TreeNode root) {
-        maxGain(root);
-        return maxSum;
-    }
-
-    public static int maxGain(TreeNode node) {
+    public static int maxPathSum(TreeNode node) {
         if (node == null) {
             return 0;
         }
-        int leftGain = Math.max(maxGain(node.left), 0);
-        int rightGain = Math.max(maxGain(node.right), 0);
+        int leftGain = Math.max(maxPathSum(node.left), 0);
+        int rightGain = Math.max(maxPathSum(node.right), 0);
         int currentNodeMaxGain = node.val + leftGain + rightGain;
         maxSum = Math.max(maxSum, currentNodeMaxGain);
         return node.val + Math.max(leftGain, rightGain);
