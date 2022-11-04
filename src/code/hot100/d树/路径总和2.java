@@ -12,21 +12,19 @@ public class 路径总和2 {
 
     public static int pathSum(TreeNode root, int targetSum) {
         if (root == null) return 0;
-        int ret = rootSum(root, targetSum);
+        int ret = 0;
+        ret += rootSum(root, targetSum);
         ret += pathSum(root.left, targetSum);
         ret += pathSum(root.right, targetSum);
         return ret;
     }
 
     public static int rootSum(TreeNode root, int targetSum) {
-        int ret = 0;
         if (root == null) return 0;
-        int val = root.val;
-        if (val == targetSum) {
-            ret++;
-        }
-        ret += rootSum(root.left, targetSum - val);
-        ret += rootSum(root.right, targetSum - val);
+        int ret = 0;
+        if (root.val == targetSum) ret++;
+        ret += rootSum(root.left, targetSum - root.val);
+        ret += rootSum(root.right, targetSum - root.val);
         return ret;
     }
 
