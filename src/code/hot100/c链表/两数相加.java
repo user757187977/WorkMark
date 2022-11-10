@@ -21,12 +21,8 @@ public class 两数相加 {
             sum = sum % 10;
             cur.next = new ListNode(sum);
             cur = cur.next;
-            if (l1 != null) {
-                l1 = l1.next;
-            }
-            if (l2 != null) {
-                l2 = l2.next;
-            }
+            if (l1 != null) l1 = l1.next;
+            if (l2 != null) l2 = l2.next;
         }
         if (carry == 1) {
             cur.next = new ListNode(carry);
