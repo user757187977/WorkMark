@@ -13,8 +13,8 @@ import code.数据结构.ListNode;
 public class 删除倒数第N个元素 {
 
     public static ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode virtual = new ListNode(0);
-        virtual.next = head;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
         ListNode fast = head;
         ListNode slow = head;
         for (int i = 0; i < n; i++) fast = fast.next;
@@ -22,7 +22,7 @@ public class 删除倒数第N个元素 {
             slow = slow.next; fast = fast.next;
         }
         slow.next = slow.next.next;
-        return virtual.next;
+        return dummy.next;
     }
 
     public static void main(String[] args) {
