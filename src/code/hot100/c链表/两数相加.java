@@ -6,6 +6,8 @@ import code.数据结构.ListNode;
  * @Description https://leetcode.cn/problems/add-two-numbers/
  * @Author lishoupeng
  * @Date 2022/9/19 09:16
+ * 输入：l1 = [2,4,3], l2 = [5,6,4]
+ * 输出：[7,0,8]
  */
 public class 两数相加 {
 
@@ -24,12 +26,8 @@ public class 两数相加 {
             if (l1 != null) l1 = l1.next;
             if (l2 != null) l2 = l2.next;
         }
-        if (carry == 1) {
-            cur.next = new ListNode(carry);
-        }
-
+        if (carry == 1) cur.next = new ListNode(carry);
         return prev.next;
-
     }
 
     public static void main(String[] args) {
