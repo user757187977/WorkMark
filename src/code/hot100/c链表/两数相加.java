@@ -12,9 +12,9 @@ import code.数据结构.ListNode;
 public class 两数相加 {
 
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode prev = new ListNode(0);
+        ListNode dummy = new ListNode(0);
         int carry = 0;
-        ListNode cur = prev;
+        ListNode cur = dummy;
         while (l1 != null || l2 != null) {
             int x = l1 != null ? l1.val : 0;
             int y = l2 != null ? l2.val : 0;
@@ -26,8 +26,10 @@ public class 两数相加 {
             if (l1 != null) l1 = l1.next;
             if (l2 != null) l2 = l2.next;
         }
-        if (carry == 1) cur.next = new ListNode(carry);
-        return prev.next;
+        if (carry == 1) {
+            cur.next = new ListNode(carry);
+        }
+        return dummy.next;
     }
 
     public static void main(String[] args) {
@@ -44,7 +46,5 @@ public class 两数相加 {
         listNode5.next = listNode6;
 
         System.out.println(addTwoNumbers(listNode1, listNode4));
-
-
     }
 }
