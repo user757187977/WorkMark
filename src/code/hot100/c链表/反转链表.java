@@ -12,8 +12,9 @@ public class 反转链表 {
     public static ListNode reverseList(ListNode head) {
         ListNode pre = null;
         ListNode cur = head;
+        ListNode next = null;
         while (cur != null) {
-            ListNode next = cur.next;
+            next = cur.next;
             cur.next = pre;
             pre = cur;
             cur = next;
