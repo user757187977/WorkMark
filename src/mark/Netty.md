@@ -56,10 +56,10 @@ CPU 释放出来.
     * 其次, 将各个进程的 IO 操作注册到 selector(复用器)上, 单独注册额外的一个进程调用 select 监听所有的 channel, 任意 channel 可以进行 IO 时候, selector 会选择对应的 IO
       操作;
     * 主要概念:
-        * Buffer:  传统的 BIO 是通过流(Stream) 完成的, 而 NIO 中所有的操作是在缓冲区完成的, 缓冲区实际是是个数组. 常见的有: ByteBuffer, CharBuffer,
+        * Buffer: 传统的 BIO 是通过流(Stream) 完成的, 而 NIO 中所有的操作是在缓冲区完成的, 缓冲区实际是是个数组. 常见的有: ByteBuffer, CharBuffer,
           ShortBuffer, IntBuffer, LongBuffer, FloatBuffer, DoubleBuffer.
-        * Channel:  和流不同, 通道是双向的, NIO 可以通过通道完成 读 写 以及同时读写. 通道分为两类: 网络读写, 文件读写.
-        * 多路复用器 Selector:  主要提供 **已就绪则执行** 的操作, 方式是通过 Selector 不断的轮询注册在其中的 Channel.
+        * Channel: 和流不同, 通道是双向的, NIO 可以通过通道完成 读 写 以及同时读写. 通道分为两类: 网络读写, 文件读写.
+        * 多路复用器 Selector: 主要提供 **已就绪则执行** 的操作, 方式是通过 Selector 不断的轮询注册在其中的 Channel.
 
 ## Netty
 

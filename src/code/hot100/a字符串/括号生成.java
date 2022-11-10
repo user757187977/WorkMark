@@ -21,6 +21,7 @@ public class 括号生成 {
         System.out.println("String:" + string + "; left:" + left + "; right:" + right);
         if (left == 0 && right == 0) {
             list.add(string);
+            System.out.println(list);
             return;
         }
         if (left > 0) generateOne(list, string + "(", left - 1, right);

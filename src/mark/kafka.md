@@ -19,6 +19,10 @@
         - 关于上面提到的 _跟得上_ 的解释: 距离上次 FetchRequest 的时间小于阈值, 或者落后的数据大于阈值. 说白了就是: 最近有同步数据的操作.
             - replica.lag.time.max.ms=10000 # 如果 leader 发现 follower 超过10秒没有向它发起 fetch 请求，就从 ISR 列表剔除
             - replica.lag.max.messages=4000 # 相差 4000 条就移除
+    - leader 选举需要注意的一个点: **不完全的leader 选举**
+        - 在 broker 级别有个参数 unclean.leader.election.enable, 默认为 false, 单表: 禁止不完全的 leader 选举.
+        - 意味着 leader 挂了, 但是此时 ISR 列表没有可选副本时, 是否允许某个不完全同步的副本成为 leader, 这有可能会导致数据丢失或者不一致. 所以金融场景禁用.
+        - 任然离不开 **可用性** 与 **一致性** 的致命对决.
 
 - 总结:
     - producer ack = -1
@@ -38,23 +42,55 @@
     - 对账: 业务数据对账
     - 布隆过滤器
 
-
 ### kafka 为什么快
+
 #### 顺序读写
-不管是内存还是磁盘, 快慢的关键在于寻址方式, 内存与磁盘都包含 顺序与随机 读写, 随机都是比较慢的, 顺序较快, 甚至磁盘的顺序读写高于内存的随机读写.
-kafka 则是将每条消息插入到 Partition 的末尾. 这种设计的缺陷就是没有办法删除消息, 所以 kafka 是不会删除数据的, 每个消费者对于每个 topic 都记录着自己的 offset. 这个 offset 是保存在 zk 中的.
-但是如果 kafka 完全不删除数据是不可能的, 提供两种策略来删除数据, 基于时间 或者 基于 Partition 文件大小.
-### Page Cache
+
+不管是内存还是磁盘, 快慢的关键在于寻址方式, 内存与磁盘都包含 顺序与随机 读写, 随机都是比较慢的, 顺序较快, 甚至磁盘的顺序读写高于内存的随机读写. kafka 则是将每条消息插入到 Partition 的末尾.
+这种设计的缺陷就是没有办法删除消息, 所以 kafka 是不会删除数据的, 每个消费者对于每个 topic 都记录着自己的 offset. 这个 offset 是保存在 zk 中的. 但是如果 kafka 完全不删除数据是不可能的,
+提供两种策略来删除数据, 基于时间 或者 基于 Partition 文件大小.
+
+#### Page Cache
+
 为了优化读写性能, kafka 利用操作系统本身的 PageCache, 也就是利用操作系统本身的内存而不是 JVM 内存. 通过 PageCache, Kafka 的读写基本都是基于内存的.
-### 零拷贝
-linux 操作系统的零拷贝机制使用了 sendFile 方法, 允许操作系统将数据从 PageCache 直接发送到网络.
-原始: 磁盘 -> page cache -> 用户态缓存区 -> socket 缓冲区 -> NIC 缓冲区
-零拷贝: 磁盘 -> page cache -> sendFile -> socket 缓冲区 -> NIC 缓冲区   不涉及用户态
-Page Cache + sendFile 提供不错的性能, 这就是位色很么消费者在不断消费数据的过程中, 是不会将 IO 磁盘打满的.
-### 分区分段+索引
-Kafka 的消息是按照 topic 分类存储的, topic 的数据又是按照一个一个 partition 存储到不同的节点, 每个 partition 对应操作系统中的一个文件夹, partition 实际又是按照 segment 分段存储的.
-通过这种分区分段存储, kafka 的消息实际是存储早一个个小的 segment 中的, 每个文件操作也是直接操作 segment. 为了查询优化, kafka 又默认为分段后的数据文件建立了索引文件. .index 文件.
-### 批量读写
-kafka 的数据读写的是批量的而不是单条的.
-### 批量压缩
-有时候瓶颈并不是CPU 或者 磁盘 IO 而是网络 IO. kafka 就是将批量的消息通过压缩的形式发送, 支持多种压缩协议.
+
+#### 零拷贝
+
+linux 操作系统的零拷贝机制使用了 sendFile 方法, 允许操作系统将数据从 PageCache 直接发送到网络. 原始: 磁盘 -> page cache -> 用户态缓存区 -> socket 缓冲区 -> NIC 缓冲区
+零拷贝: 磁盘 -> page cache -> sendFile -> socket 缓冲区 -> NIC 缓冲区 不涉及用户态 Page Cache + sendFile 提供不错的性能, 这就是位色很么消费者在不断消费数据的过程中,
+是不会将 IO 磁盘打满的.
+
+#### 分区分段 与 索引
+kafka 的架构为: 集群 -> borker -> topic -> partition -> 副本 -> segment -> .index/.log
+![img.png](images/kafka_img2.png)
+最终逻辑就是 consumer 传过来 offset, offset 在 index 文件中查找消息索引, 再来到 log 文件找到具体消息.
+同时 segment 也带来一个特点, 容易清除已消费完的文件, 减少磁盘用量.
+
+#### 批量读写 与 压缩
+
+1. kafka 的数据读写的是批量的而不是单条的.
+2. 有时候瓶颈并不是CPU 或者 磁盘 IO 而是网络 IO. kafka 就是将批量的消息通过压缩的形式发送, 支持多种压缩协议.
+
+### kafka 集群
+
+`kafka 使用 zk 来维护 brokers 的信息. 每个 broker 都有一个唯一表示 broker.id.`
+
+* 每个 broker 启动的时候, 会在 zk /brokers/ids 路径下创建一个临时节点, 将自己的 brokerId 写入. 完成注册过程
+* 所有 broker 竞争在 zk 上创建 /controller 节点, 由于 zk 的唯一节点, 必然只有一个 broker 创建成功, 这个成为 controller broker. 额外负责管理分区与副本状态.
+* 当 broker 宕机时, 触发 zk 的 watcher 事件, 如果宕机的是 controller broker 时, 还会触发新的 controller 选举.
+
+### 副本机制
+
+topic 下有多个分区, 分区是 kafka 最基本的存储单元. 每个分区可以有多个副本, 其中一个副本是 leader
+
+### 消息顺序
+
+kafka 只能保障单独分区内的消息顺序, 不能跨分区保障消息顺序.
+
+### kafka 的数据事务
+
+事务包含三个级别
+
+1. 最多一次: 消息不会重复发送, 但也可能一次也不发送
+2. 最少一次: 消息至少发送一次, 有可能重复
+3. 精准一次: 不多不少.

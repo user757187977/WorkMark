@@ -9,7 +9,7 @@
 
 1. RM 负责整个集群的资源管理和分配, 是一个全局的资源管理器.
 2. NM 以心跳的方式向 RM 汇报使用情况(CPU/内存), RM 只接受 NM 的资源回报信息, 对于具体的资源处理交给 NM 去完成.
-3. Yarn Scheduler 根据application 的请求为其分配资源, 不负责application job 的监控 追踪 启动等.
+3. Yarn Scheduler 根据 application 的请求为其分配资源, 不负责 application job 的监控 追踪 启动等.
 
 ## NodeManager
 
@@ -25,14 +25,14 @@
 4. 与 NM 通信以停止/启动 任务.
 5. 监控所有任务运行状态, 并在运行失败时重新为任务申请资源之后重启任务.
 
-## Yarn运行流程
+## Yarn 运行流程
 
 1. client 向 RM 提交应用程序, 其中包含启动该应用的 AM 的必须信息, 例如: AM 程序, 启动 AM 的命令, 用户程序等.
 2. RM 启动一个 Container 用于运行 AM.
 3. 启动中的 AM 负责向 RM 注册自己, 成功后与 RM 保持心跳.
 4. AM 向 RM请求, 申请对应数目的 Container
 5. RM 返回给 AM 申请的 Container 信息, 申请成功的 Container 由 AM 完成初始化, container 启动后, AM 与对应的 NM 通信, 要求启动对应的 Container, AM 与 NM 保持心跳,
-   从而对NM上运行的任务进行监控和管理
+   从而对 NM 上运行的任务进行监控和管理
 6. contain 运行期间, AM 对 container 进行监控, container 向 AM 汇报自己的进度和状态信息.
 7. 应用运行期间, client 与 AM通信获取应用的状态, 进度更新.
-8. 应用运行结束后, AM 向 RM注销自己
+8. 应用运行结束后, AM 向 RM 注销自己
