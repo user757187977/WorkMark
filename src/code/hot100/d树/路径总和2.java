@@ -2,30 +2,37 @@ package code.hot100.d树;
 
 import code.数据结构.TreeNode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * @Description 从任意节点 到 任意节点符合的总数
- * https://leetcode.cn/problems/path-sum-iii/
+ * @Description 根到叶 符合的 返回路径
+ * https://leetcode.cn/problems/path-sum-ii/
  * @Author lishoupeng
- * @Date 2022/10/24 08:43
+ * @Date 2022/10/23 22:06
  */
 public class 路径总和2 {
 
-    public static int pathSum(TreeNode root, int targetSum) {
-        if (root == null) return 0;
-        int ret = 0;
-        ret += rootSum(root, targetSum);
-        ret += pathSum(root.left, targetSum);
-        ret += pathSum(root.right, targetSum);
-        return ret;
+    static List<List<Integer>> asw = new ArrayList<>();
+
+    public static List<List<Integer>> pathSum(TreeNode root, int target) {
+        List<Integer> aswTemp = new ArrayList<>();
+        dfs(root, aswTemp, 0, target);
+        return asw;
     }
 
-    public static int rootSum(TreeNode root, int targetSum) {
-        if (root == null) return 0;
-        int ret = 0;
-        if (root.val == targetSum) ret++;
-        ret += rootSum(root.left, targetSum - root.val);
-        ret += rootSum(root.right, targetSum - root.val);
-        return ret;
+    public static void dfs(TreeNode node, List<Integer> aswTemp, int sum, int target) {
+        if (node == null) return;
+        if (node.left == null && node.right == null && node.val + sum == target) {
+            aswTemp.add(node.val);
+            asw.add(new ArrayList<>(aswTemp));
+            aswTemp.remove(aswTemp.size() - 1);
+            return;
+        }
+        aswTemp.add(node.val);
+        dfs(node.left, aswTemp, sum + node.val, target);
+        dfs(node.right, aswTemp, sum + node.val, target);
+        aswTemp.remove(aswTemp.size() - 1);
     }
 
     public static void main(String[] args) {
@@ -42,8 +49,6 @@ public class 路径总和2 {
         treeNode1.right = treeNode4;
         treeNode2.left = treeNode5;
         treeNode2.right = treeNode6;
-        System.out.println(pathSum(treeNode0, 6));
+        System.out.println(pathSum(treeNode0, 4));
     }
-
-
 }

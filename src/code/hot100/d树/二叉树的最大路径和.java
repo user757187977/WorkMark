@@ -18,6 +18,7 @@ public class 二叉树的最大路径和 {
         int leftGain = Math.max(maxPathSum(node.left), 0);
         int rightGain = Math.max(maxPathSum(node.right), 0);
         int currentNodeMaxGain = node.val + leftGain + rightGain;
+        System.out.println("node:" + node.val + "; currentNodeMaxGain:" + currentNodeMaxGain);
         maxSum = Math.max(maxSum, currentNodeMaxGain);
         return node.val + Math.max(leftGain, rightGain);
     }
