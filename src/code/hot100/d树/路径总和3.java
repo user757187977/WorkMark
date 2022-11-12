@@ -3,7 +3,7 @@ package code.hot100.d树;
 import code.数据结构.TreeNode;
 
 /**
- * @Description 从任意节点 到 任意节点符合的总数
+ * @Description 根到叶 符合的 个数
  * https://leetcode.cn/problems/path-sum-iii/
  * @Author lishoupeng
  * @Date 2022/10/24 08:43
