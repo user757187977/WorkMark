@@ -46,14 +46,11 @@ public class 树的公共祖先 {
             p = parent.get(p.val);
         }
         while (q != null) {
-            if (visited.contains(q.val)) {
-                return q;
-            }
+            if (visited.contains(q.val)) return q;
             q = parent.get(q.val);
         }
         return null;
     }
-
 
     public static void main(String[] args) {
         TreeNode treeNode1 = new TreeNode(1);
