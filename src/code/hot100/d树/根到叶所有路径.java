@@ -13,26 +13,26 @@ import java.util.List;
  */
 public class 根到叶所有路径 {
 
-    public static List<List<Integer>> allPath = new ArrayList<>();
+    static List<List<Integer>> asw = new ArrayList<>();
 
-    public static List<List<Integer>> getAllPath(TreeNode root) {
-        List<Integer> allPathTemp = new ArrayList<>();
-        dfs(root, allPathTemp);
-        return allPath;
+    public static List<List<Integer>> path(TreeNode root) {
+        List<Integer> aswTemp = new ArrayList<>();
+        dfs(root, aswTemp);
+        return asw;
     }
 
-    public static void dfs(TreeNode node, List<Integer> allPathTemp) {
+    public static void dfs(TreeNode node, List<Integer> aswTemp) {
         if (node == null) return;
         if (node.left == null && node.right == null) {
-            allPathTemp.add(node.val);
-            allPath.add(new ArrayList<>(allPathTemp));
-            allPathTemp.remove(allPathTemp.size() - 1);
+            aswTemp.add(node.val);
+            asw.add(new ArrayList<>(aswTemp));
+            aswTemp.remove(aswTemp.size() - 1);
             return;
         }
-        allPathTemp.add(node.val);
-        dfs(node.left, allPathTemp);
-        dfs(node.right, allPathTemp);
-        allPathTemp.remove(allPathTemp.size() - 1);
+        aswTemp.add(node.val);
+        dfs(node.left, aswTemp);
+        dfs(node.right, aswTemp);
+        aswTemp.remove(aswTemp.size() - 1);
     }
 
     public static void main(String[] args) {

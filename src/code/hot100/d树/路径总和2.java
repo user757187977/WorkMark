@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description 根到叶 符合的 返回路径
- * https://leetcode.cn/problems/path-sum-ii/
+ * @Description https://leetcode.cn/problems/path-sum-ii/
+ * 根到叶 符合的 返回路径
  * @Author lishoupeng
  * @Date 2022/10/23 22:06
  */
@@ -15,7 +15,7 @@ public class 路径总和2 {
 
     static List<List<Integer>> asw = new ArrayList<>();
 
-    public static List<List<Integer>> pathSum(TreeNode root, int target) {
+    public static List<List<Integer>> path(TreeNode root, int target) {
         List<Integer> aswTemp = new ArrayList<>();
         dfs(root, aswTemp, 0, target);
         return asw;
