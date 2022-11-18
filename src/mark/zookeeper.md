@@ -14,7 +14,7 @@
 5. zk 选举
    1. 概念:
       1. serverId: 服务 id
-      2. zxId: 事务 id
+      2. zxId: 事务 id, 每个更新请求会升级一次 zxId
       3. 在选举过程中, 优先投票给 zxId 大的 server, 并且更新自己的事务.
    2. 角色:
       1. leader

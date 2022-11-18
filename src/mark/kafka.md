@@ -56,9 +56,10 @@
 
 #### 零拷贝
 
-linux 操作系统的零拷贝机制使用了 sendFile 方法, 允许操作系统将数据从 PageCache 直接发送到网络. 原始: 磁盘 -> page cache -> 用户态缓存区 -> socket 缓冲区 -> NIC 缓冲区
-零拷贝: 磁盘 -> page cache -> sendFile -> socket 缓冲区 -> NIC 缓冲区 不涉及用户态 Page Cache + sendFile 提供不错的性能, 这就是位色很么消费者在不断消费数据的过程中,
-是不会将 IO 磁盘打满的.
+首先了解 DMA 机制, 是允许硬件, 比如: 网卡可以直接访问内存, 这样操作系统就可以直接将数据从 PageCache 直接发送到网络. 避免了原来的 内核态 与 用户态 相互切换的过程
+原始: 磁盘 -> page cache -> 用户态缓存区 -> socket 缓冲区 -> NIC 缓冲区
+零拷贝: 磁盘 -> page cache -> sendFile -> socket 缓冲区 -> NIC 缓冲区 不涉及用户态 
+而在 java 零拷贝的工具类中, 同样有基于 操作系统 sendFile 的内核调用封装的方法, 实现零拷贝.
 
 #### 分区分段 与 索引
 kafka 的架构为: 集群 -> borker -> topic -> partition -> 副本 -> segment -> .index/.log

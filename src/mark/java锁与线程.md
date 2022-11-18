@@ -6,7 +6,7 @@
 3. 被加载到 jvm 中的每个实例都有一个对象头, 其中对象头中包含着 32 位的存储单元, 其中就保存了 monitor 信息与锁状态.
 4. synchronize 也对应有着优化:
     1.
-   偏向锁: 当锁对象第一次被线程A获取时, 对象头中的标志位被修改为可偏向, 是否偏向锁置为1, 锁对象与线程A绑定偏向锁, 当下一次A线程再参与竞争时, 对象偏向被线程A锁住;
+   偏向锁: 当锁对象第一次被线程 A 获取时, 对象头中的标志位被修改为可偏向, 是否偏向锁置为 1, 锁对象与线程A绑定偏向锁, 当下一次A线程再参与竞争时, 对象偏向被线程A锁住;
    就相当于尝试获取锁的第一句话就是找对象的偏向锁之后和当前线程比较, 成功了把锁给线程A, 失败了, 取消偏向锁；
     2. 轻量级锁: 自旋锁 + CAS; CAS 尝试修改对象头的 markWord 中心的信息.
     3. 那么自旋又是什么意思呢, 就是在许多场景下, 需要加锁执行的代码是执行很快的, 那么我只需要线程死循环一会来获取锁就可以避免阻塞了, JDK6中叫适应性自旋锁, 怎么适应性呢,
@@ -38,18 +38,14 @@
 
 ```java
 public class Singleton {
-    private volatile static Singleton singleton; //volatile是防止指令重排
+    private volatile static Singleton singleton; //volatile 防止指令重排
 
     private Singleton() {
     }
 
     public static Singleton getSingleton() {
-        if (singleton == null) {
-            synchronized (Singleton.class) {
-                if (singleton == null) {
-                    singleton = new Singleton();
-                }
-            }
+        if (singleton == null) synchronized (Singleton.class) {
+            if (singleton == null) singleton = new Singleton();
         }
         return singleton;
     }
@@ -69,7 +65,7 @@ AQS是一个抽象类, 定义了线程之间获取资源的流程, 比如有线�
 3. 这个机制是使用队列实现的, 即将暂时获取不到锁的线程加入到队列中
 
 AQS自己本身是围绕一个 state 进行的, 所有对state的操作都是CAS的； 但是AQS因为是个抽象类, 所以子类的实现是关注点, 子类需要实现什么呢, 主要是acquire(获取独占锁), 这个方法的流程是获取锁(
-tryacquire), 获取锁失败之后就需要加入到等待队列(addwaiter)
+tryAcquire), 获取锁失败之后就需要加入到等待队列(addWaiter)
 
 ### Lock 接口
 
@@ -119,16 +115,27 @@ tryacquire), 获取锁失败之后就需要加入到等待队列(addwaiter)
     4. CallerRunsPolicy(交给线程池调用所在的线程进行处理)
 5. 为什么阿里推荐使用 ThreadPool...
     1.
-   newFixedThreadPool: corePoolSize和maximumPoolSize相同, keepAliveTime也就无意义了, 所以设置为0L. 这个线程池使用的是LinkedBlockingQueue(无界队列)
-   来存corePoolSize线程无法处理的任务. 那么这个线程池问题在哪里呢？最大的问题在于workQueue使用了无界队列, 当任务数多到线程池处理不过来时, 任务全部进入workQueue, 会消耗很大的内存, 甚至OOM.
-    2. newSingleThreadExecutor: 是 newFixedThreadPool的一个具化版本. 指定了固定的nThreads: 1. 所以这个线程池的问题跟newFixedThreadPool一样. 当任务过多时,
-       可能出现OOM.
-    3. newCachedThreadPool: corePoolSize设置为0, 也就是说默认这个线程池中不会有线程创建. 使用的workQueue是SynchronousQueue, 只有被消费才能继续生产.
+   newFixedThreadPool: corePoolSize 和 maximumPoolSize 相同, keepAliveTime 也就无意义了, 所以设置为 0L. 这个线程池使用的是 LinkedBlockingQueue(
+   无界队列)
+   来存 corePoolSize 线程无法处理的任务. 那么这个线程池问题在哪里呢？最大的问题在于workQueue使用了无界队列, 当任务数多到线程池处理不过来时, 任务全部进入 workQueue, 会消耗很大的内存, 甚至OOM.
+    2. newSingleThreadExecutor: 是 newFixedThreadPool 的一个具化版本. 指定了固定的nThreads: 1. 所以这个线程池的问题跟 newFixedThreadPool 一样.
+       当任务过多时, 可能出现 OOM.
+    3. newCachedThreadPool: corePoolSize 设置为0, 也就是说默认这个线程池中不会有线程创建. 使用的 workQueue 是 SynchronousQueue, 只有被消费才能继续生产.
+6. 关于如何设置合适的线程池参数:
+    1. 虽然大家知道 利用 cpu 耗时/IO 耗时 乘以 cpu 核心数再考虑上下文切换 可以得到一个差不多的线程数, 但是问题的关键在于: 生产/测试环境 和 硬件/数据量 的区别, 导致我们刚才推断的线程数只具备参考意义. 并且
+       cpu 运行时长 与 IO 运行时长也并不容易计算得很纯粹.
+    2. 得出原理: 具体的参数配置还是需要经过测试的.
+    3. 那么如何测试线程池的参数? 就需要开源工具了, 比如 dynamic-tp 一个动态线程池配置工具.
+    4. 这个工具的原理并不难, 因为线程池本身是可以动态配置的; dynamic-tp 只是和 spring 集合起来, 并且利用后置处理器等 spring 拓展的功能把这个配置过程解决的不那么黑核了而已, 增加了 指标 监控 报警
+       通知等.
+    5. 核心原理仍然是离不开线程池本身的动态配置. 那么我们回顾下线程池的动态配置.
+    6. if(newCorePoolSize < curCorePoolSize) 则有一个 `释放空闲worker` 的操作, 这个操作首先是需要加锁的, 其次要判断线程状态是否可以用于释放.
+    7. 修改其他参数, 如果影响到核心线程数, 也会有上面这么一个过程.
 
 ### CountdownLatch CyclicBarrier Semaphore
 
-1. CountdownLatch: 是一个递减的计数器.
-2. CyclicBarrier: 可循环的屏障, 是一个增加的过程, 线程完成逐渐到达屏障. 之后执行某个方法.
+1. CountdownLatch: 是一个递减的计数器. 比如构造函数给个 3, 就说明等待三个线程执行之后, 执行某件事情.
+2. CyclicBarrier: 可循环的屏障, 是一个增加的过程, 线程完成逐渐到达屏障之后执行某个方法. 关键在于: 重复, 可以理解为 每多少个线程到达之后, 执行某件事情.
 3. Semaphore: 信号量, 控制并发多少个线程的.
 
 ### ThreadLocal
@@ -145,19 +152,14 @@ tryacquire), 获取锁失败之后就需要加入到等待队列(addwaiter)
 
 ### 线程的状态
 
-1. 创建: new 之后, 仅仅是得到内存而已
-2. 就绪: Thread.start() 线程开始等待调度
-3. 运行: 如果被调度起来, 则是运行状态
-4. 阻塞: 线程放弃 CPU 时间片
-5. 死亡: 正常结束, 抛出异常
+1. NEW: new 之后, 但是没有 start, 仅仅是得到内存而已.
+2. RUNNABLE: Thread.start() 线程开始等待调度.
+3. BLOCKED: 阻塞状态, 等待锁.
+4. WAITING: 手动调用 wait, 让当前线程阻塞, 并且当前线程必须拥有此对象的 monitor(锁).
+5. TIMED_WAITING: 指定了时间的等待状态.
+6. TERMINATED: 终止状态.
 
-其中阻塞:
-
-1. 等待阻塞: 某个线程获得锁之后调用 wait,
-2. 同步阻塞: 等待获得锁
-3. 其他阻塞:
-
-线程的方法:
+### 线程的方法
 
 1. sleep: 线程进入阻塞状态
 2. wait: 当前获得锁的线程进入等待, 直到其他线程调用次对象的 notify notifyAll 方法.

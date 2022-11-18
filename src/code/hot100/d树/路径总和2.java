@@ -15,7 +15,7 @@ public class 路径总和2 {
 
     static List<List<Integer>> asw = new ArrayList<>();
 
-    public static List<List<Integer>> path(TreeNode root, int target) {
+    public static List<List<Integer>> pathSum(TreeNode root, int target) {
         List<Integer> aswTemp = new ArrayList<>();
         dfs(root, aswTemp, 0, target);
         return asw;

@@ -15,7 +15,7 @@ public class 根到叶所有路径 {
 
     static List<List<Integer>> asw = new ArrayList<>();
 
-    public static List<List<Integer>> path(TreeNode root) {
+    public static List<List<Integer>> getAllPath(TreeNode root) {
         List<Integer> aswTemp = new ArrayList<>();
         dfs(root, aswTemp);
         return asw;

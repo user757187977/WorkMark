@@ -1,7 +1,7 @@
-`Yarn 是资源管理, 包含 ResourceManager NodeManager ApplicationMaster`
+`Yarn 除了是一个调度系统, 还是一个计算框架, 包含 ResourceManager NodeManager ApplicationMaster`
 
 * ResourceManager 负责所有资源的监控 分配 管理
-* ApplicationMaster 负责每个具体应用程序的调度
+* ApplicationMaster 属于每个调度程序的入口, 用于和 RM 协商获取资源, 还有 NM 的监控.
 * NodeManager 负责每个节点的维护
 * 对于所有的 Applications RM 拥有绝对的资源分配权, 而 AM 则会和 RM 协商资源, 同时和 NM 通信来执行和监控 task.
 
@@ -30,7 +30,7 @@
 1. client 向 RM 提交应用程序, 其中包含启动该应用的 AM 的必须信息, 例如: AM 程序, 启动 AM 的命令, 用户程序等.
 2. RM 启动一个 Container 用于运行 AM.
 3. 启动中的 AM 负责向 RM 注册自己, 成功后与 RM 保持心跳.
-4. AM 向 RM请求, 申请对应数目的 Container
+4. AM 向 RM 请求, 申请对应数目的 Container
 5. RM 返回给 AM 申请的 Container 信息, 申请成功的 Container 由 AM 完成初始化, container 启动后, AM 与对应的 NM 通信, 要求启动对应的 Container, AM 与 NM 保持心跳,
    从而对 NM 上运行的任务进行监控和管理
 6. contain 运行期间, AM 对 container 进行监控, container 向 AM 汇报自己的进度和状态信息.
