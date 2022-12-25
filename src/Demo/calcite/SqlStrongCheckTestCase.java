@@ -8,13 +8,13 @@ package Demo.calcite;
 public class SqlStrongCheckTestCase {
     static final String SQL_HAS_WITH_INSERT = "with t1 as (\n" +
             "  select a.business_id, date_format(a.end_time, 'yyyy-MM-dd') as dt, sum(a.memory_seconds) as sum_memory\n" +
-            "  from ares.application a inner join ares.job j on a.job_id = j.id and j.job_type != 10\n" +
+            "  from table1 a inner join table2 j on a.job_id = j.id and j.job_type != 10\n" +
             "  where a.memory_seconds >= 0 and a.vcore_seconds >= 0 and a.end_time >= '${yesterday} 00:00:00' and a.end_time < '${today} 00:00:00'\n" +
             "  group by a.business_id,date_format(a.end_time, 'yyyy-MM-dd')\n" +
             "),\n" +
             "t2 as (\n" +
             "  select a.business_id,date_format(a.end_time, 'yyyy-MM-dd') as dt,sum(a.vcore_seconds) as sum_vcore\n" +
-            "  from ares.application a inner join ares.job j on a.job_id = j.id and j.job_type != 10\n" +
+            "  from table1 a inner join table2 j on a.job_id = j.id and j.job_type != 10\n" +
             "  where a.memory_seconds >= 0 and a.vcore_seconds >= 0 and a.end_time >= '${yesterday} 00:00:00' and a.end_time < '${today} 00:00:00'\n" +
             "  group by a.business_id, date_format(a.end_time, 'yyyy-MM-dd')\n" +
             "),\n" +
@@ -23,30 +23,30 @@ public class SqlStrongCheckTestCase {
             "  union all\n" +
             "  select business_id, dt, sum_vcore/3600 as vvv, 'ares_job_cpu' as metric from t2\n" +
             ")\n" +
-            "insert overwrite table ares.application_summary partition (p_date = '${yesterday}')\n" +
+            "insert overwrite table test partition (p_date = '${yesterday}')\n" +
             "select business_id, metric, vvv, dt from t3";
-    static final String SQL_ONLY_INSER = "insert overwrite table ares.job_detail partition(p_date = '${today}')\n" +
+    static final String SQL_ONLY_INSER = "insert overwrite table table2_detail partition(p_date = '${today}')\n" +
             "select\n" +
             "    j.id, j.job_name, j.job_name_cn, j.business_id, j.sub_business_id, j.link_url, j.job_type, \n" +
             "    j.priority, j.script_location, j.execute_account, j.execute_queue, j.launch_command, j.`parameter`, \n" +
             "    j.env_vars, j.output_period, j.`trigger`, j.timeout, j.concurrency, j.is_sla, j.alarm_strategy, \n" +
             "    j.creator, j.demander, j.retry_count, j.retry_interval, j.description, j.`status`, j.create_time, \n" +
             "    j.update_time, temp.avg_running_duration as running_time\n" +
-            "from ares.job j left join ares.job_running_duration temp on j.id = temp.job_id and temp.p_date = '${today}'";
+            "from table2 j left join table2_running_duration temp on j.id = temp.job_id and temp.p_date = '${today}'";
     static final String SQL_ONLY_SELECT = "select business_id, metric, vvv, dt from t3";
-    static final String SQL_REMARK_INSERT = "--insert overwrite table ares.job_detail partition(p_date = '${today}')\n" +
+    static final String SQL_REMARK_INSERT = "--insert overwrite table table2_detail partition(p_date = '${today}')\n" +
             "select\n" +
             "    j.id, j.job_name, j.job_name_cn, j.business_id, j.sub_business_id, j.link_url, j.job_type, \n" +
             "    j.priority, j.script_location, j.execute_account, j.execute_queue, j.launch_command, j.`parameter`, \n" +
             "    j.env_vars, j.output_period, j.`trigger`, j.timeout, j.concurrency, j.is_sla, j.alarm_strategy, \n" +
             "    j.creator, j.demander, j.retry_count, j.retry_interval, j.description, j.`status`, j.create_time, \n" +
             "    j.update_time, temp.avg_running_duration as running_time\n" +
-            "from ares.job j left join ares.job_running_duration temp on j.id = temp.job_id and temp.p_date = '${today}'";
+            "from table2 j left join table2_running_duration temp on j.id = temp.job_id and temp.p_date = '${today}'";
     static final String SQL_MULTIPLE_SELECT = "select business_id, metric, vvv, dt from t3;\n" +
             "select business_id, metric, vvv, dt from t3;";
 
     static final String SQL_MULTIPLE_SELECT_HAS_INSERT = "select business_id, metric, vvv, dt from t3;\n" +
-            "insert overwrite table ares.application_summary partition (p_date = '${yesterday}') select business_id, metric, vvv, dt from t3;\n" +
+            "insert overwrite table table1_summary partition (p_date = '${yesterday}') select business_id, metric, vvv, dt from t3;\n" +
             "select business_id, metric, vvv, dt from t3;";
 
     static final String SQL_ONLY_CREATE_VIEW = "create or replace view  ods_action_answer.ods_answer_collect_pt_info(\n" +
