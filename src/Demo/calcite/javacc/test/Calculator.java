@@ -13,111 +13,129 @@ public class Calculator implements CalculatorConstants {
 //定义语法
 
 //解析一级树处理加减
-  final public double calc() throws ParseException {double left;
+  final public double calc() throws ParseException {
+    trace_call("calc");
+    try {
+double left;
  double right;
-    left = mutlOrDiv();
-    label_1:
-    while (true) {
+      left = mutlOrDiv();
+      label_1:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case ADD:
+        case SUBTRACT:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[0] = jj_gen;
+          break label_1;
+        }
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case ADD:{
+          jj_consume_token(ADD);
+          right = mutlOrDiv();
+left += right;
+          break;
+          }
+        case SUBTRACT:{
+          jj_consume_token(SUBTRACT);
+          right = mutlOrDiv();
+left = left - right;
+          break;
+          }
+        default:
+          jj_la1[1] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+{if ("" != null) return left;}
+    throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("calc");
+    }
+}
+
+//解析二级树处理乘除
+  final public double mutlOrDiv() throws ParseException {
+    trace_call("mutlOrDiv");
+    try {
+double left;
+ double right;
+      left = parseBase();
+      label_2:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case MULTIPLY:
+        case DIVIDE:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[2] = jj_gen;
+          break label_2;
+        }
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case MULTIPLY:{
+          jj_consume_token(MULTIPLY);
+          right = parseBase();
+left *= right ;
+          break;
+          }
+        case DIVIDE:{
+          jj_consume_token(DIVIDE);
+          right = parseBase();
+left = left/right;
+          break;
+          }
+        default:
+          jj_la1[3] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+{if ("" != null) return left;}
+    throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("mutlOrDiv");
+    }
+}
+
+//解析三级树
+  final public double parseBase() throws ParseException {
+    trace_call("parseBase");
+    try {
+Token t = null;
+ double num;
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case ADD:
-      case SUBTRACT:{
-        ;
+      case NUMBER:{
+        t = jj_consume_token(NUMBER);
+{if ("" != null) return Double.parseDouble(t.image);}
         break;
         }
-      default:
-        jj_la1[0] = jj_gen;
-        break label_1;
-      }
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case ADD:{
-        jj_consume_token(ADD);
-        right = mutlOrDiv();
-left += right;
+      case LPAREN:{
+        jj_consume_token(LPAREN);
+        num = calc();
+        jj_consume_token(RPAREN);
+{if ("" != null) return num;}
         break;
         }
       case SUBTRACT:{
         jj_consume_token(SUBTRACT);
-        right = mutlOrDiv();
-left = left - right;
-        break;
-        }
-      default:
-        jj_la1[1] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    }
-{if ("" != null) return left;}
-    throw new Error("Missing return statement in function");
-}
-
-//解析二级树处理乘除
-  final public double mutlOrDiv() throws ParseException {double left;
- double right;
-    left = parseBase();
-    label_2:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case MULTIPLY:
-      case DIVIDE:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[2] = jj_gen;
-        break label_2;
-      }
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case MULTIPLY:{
-        jj_consume_token(MULTIPLY);
-        right = parseBase();
-left *= right ;
-        break;
-        }
-      case DIVIDE:{
-        jj_consume_token(DIVIDE);
-        right = parseBase();
-left = left/right;
-        break;
-        }
-      default:
-        jj_la1[3] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    }
-{if ("" != null) return left;}
-    throw new Error("Missing return statement in function");
-}
-
-//解析三级树
-  final public double parseBase() throws ParseException {Token t = null;
- double num;
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case NUMBER:{
-      t = jj_consume_token(NUMBER);
-{if ("" != null) return Double.parseDouble(t.image);}
-      break;
-      }
-    case LPAREN:{
-      jj_consume_token(LPAREN);
-      num = calc();
-      jj_consume_token(RPAREN);
-{if ("" != null) return num;}
-      break;
-      }
-    case SUBTRACT:{
-      jj_consume_token(SUBTRACT);
-      t = jj_consume_token(NUMBER);
+        t = jj_consume_token(NUMBER);
 {if ("" != null) return 0-Double.parseDouble(t.image);}
-      break;
+        break;
+        }
+      default:
+        jj_la1[4] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
       }
-    default:
-      jj_la1[4] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
     throw new Error("Missing return statement in function");
+    } finally {
+      trace_return("parseBase");
+    }
 }
 
   /** Generated Token Manager. */
@@ -138,6 +156,9 @@ left = left/right;
 	   jj_la1_0 = new int[] {0x300,0x300,0xc00,0xc00,0x250,};
 	}
 
+  {
+      enable_tracing();
+  }
   /** Constructor with InputStream. */
   public Calculator(java.io.InputStream stream) {
 	  this(stream, null);
@@ -219,6 +240,7 @@ left = left/right;
 	 jj_ntk = -1;
 	 if (token.kind == kind) {
 	   jj_gen++;
+	   trace_token(token, "");
 	   return token;
 	 }
 	 token = oldToken;
@@ -233,6 +255,7 @@ left = left/right;
 	 else token = token.next = token_source.getNextToken();
 	 jj_ntk = -1;
 	 jj_gen++;
+	   trace_token(token, " (in getNextToken)");
 	 return token;
   }
 
@@ -295,12 +318,53 @@ left = left/right;
 	 return trace_enabled;
   }
 
-  /** Enable tracing. */
+  private int trace_indent = 0;
+/** Enable tracing. */
   final public void enable_tracing() {
+	 trace_enabled = true;
   }
 
-  /** Disable tracing. */
+/** Disable tracing. */
   final public void disable_tracing() {
+	 trace_enabled = false;
+  }
+
+  protected void trace_call(String s) {
+	 if (trace_enabled) {
+	   for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
+	   System.out.println("Call:	" + s);
+	 }
+	 trace_indent = trace_indent + 2;
+  }
+
+  protected void trace_return(String s) {
+	 trace_indent = trace_indent - 2;
+	 if (trace_enabled) {
+	   for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
+	   System.out.println("Return: " + s);
+	 }
+  }
+
+  protected void trace_token(Token t, String where) {
+	 if (trace_enabled) {
+	   for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
+	   System.out.print("Consumed token: <" + tokenImage[t.kind]);
+	   if (t.kind != 0 && !tokenImage[t.kind].equals("\"" + t.image + "\"")) {
+		 System.out.print(": \"" + TokenMgrError.addEscapes(t.image) + "\"");
+	   }
+	   System.out.println(" at line " + t.beginLine + " column " + t.beginColumn + ">" + where);
+	 }
+  }
+
+  protected void trace_scan(Token t1, int t2) {
+	 if (trace_enabled) {
+	   for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
+	   System.out.print("Visited token: <" + tokenImage[t1.kind]);
+	   if (t1.kind != 0 && !tokenImage[t1.kind].equals("\"" + t1.image + "\"")) {
+		 System.out.print(": \"" + TokenMgrError.addEscapes(t1.image) + "\"");
+	   }
+	   System.out.println(" at line " + t1.beginLine + " column " + t1.beginColumn + ">; Expected token: <" + tokenImage[t2] + ">");
+	 }
   }
 
 }

@@ -16,8 +16,6 @@ public class Calculator {
          this(new StringReader(expr));
     }
 
-}}
-
 }
 
 //固定格式
