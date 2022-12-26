@@ -1,4 +1,4 @@
-package Demo.calcite;
+package demo.calcite;
 
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.parser.SqlParseException;

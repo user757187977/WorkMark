@@ -7,12 +7,12 @@
 ![img.png](img.png)
 
 #### Parser
-`Calcite 使用 javacc 做 SQL 解析, `
+`Calcite 使用 javacc 做 SQL 解析`
 ##### javacc
-`javacc 是一个 语法词法 解析器的生成器, 是个生成器!`
+`javacc 是一个 语法词法 解析器的生成器, 是个生成器, javacc 解析过程的本质也是利用 正则`
 * 语法解析: parsing
 * 词法解析: 将每一个字符串解析成一个个标识符(Token), 
-
+javacc 的关键还是清楚的理解规则的定义
 以一个计算器为例
 
 ![1.jpg](1.jpg)

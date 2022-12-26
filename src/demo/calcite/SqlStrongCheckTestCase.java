@@ -1,4 +1,4 @@
-package Demo.calcite;
+package demo.calcite;
 
 /**
  * @Description

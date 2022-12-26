@@ -1,4 +1,4 @@
-package Demo.curator.HA;
+package demo.curator.HA;
 
 /**
  * @Description
