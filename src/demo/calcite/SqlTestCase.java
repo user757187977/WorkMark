@@ -5,7 +5,7 @@ package demo.calcite;
  * @Author lishoupeng
  * @Date 2022/12/1 19:11
  */
-public class SqlStrongCheckTestCase {
+public class SqlTestCase {
     static final String SQL_HAS_WITH_INSERT = "with t1 as (\n" +
             "  select a.business_id, date_format(a.end_time, 'yyyy-MM-dd') as dt, sum(a.memory_seconds) as sum_memory\n" +
             "  from table1 a inner join table2 j on a.job_id = j.id and j.job_type != 10\n" +
