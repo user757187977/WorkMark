@@ -65,7 +65,9 @@ public class Test {
 
 [源码](./CBOTest.java) 入口
 
-设计模式: [访问者](../../mark/设计模式.md)模式
+解析的结果: ![img.png](img/img5.png)
+
+延伸: [访问者](../../mark/设计模式.md)设计模式
 
 ### Validate
 

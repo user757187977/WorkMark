@@ -1,6 +1,7 @@
 package demo.calcite;
 
 import demo.calcite.utils.CalciteUtils;
+import lombok.Data;
 import org.apache.calcite.adapter.enumerable.EnumerableConvention;
 import org.apache.calcite.adapter.enumerable.EnumerableRules;
 import org.apache.calcite.config.CalciteConnectionConfigImpl;
@@ -40,6 +41,7 @@ import java.util.Properties;
  * @Author lishoupeng
  * @Date 2022/12/28 16:25
  */
+@Data
 public class CBOTest {
 
     private static final SchemaPlus schemaPlus = CalciteUtils.registerRootSchema();
@@ -134,11 +136,13 @@ public class CBOTest {
                 "order by user_id";
 
         SqlNode parsedSqlNode = parse(sql);
-        System.out.println("The SqlNode after parsed is:" + parsedSqlNode.toString());
-
         Visitor visitor = new Visitor();
         parsedSqlNode.accept(visitor);
-        System.out.println(visitor);
+        System.out.println("The SqlNode after parsed is:" + parsedSqlNode);
+        System.out.println(visitor.getOrderByColumnNames());
+        System.out.println(visitor.getSelectColumnNames());
+        System.out.println(visitor.getSelectTableNames());
+        System.out.println(visitor.getWhereColumnNames());
 
         SqlValidator sqlValidator = createValidator();
         SqlNode validatedSqlNode = validate(parsedSqlNode, sqlValidator);

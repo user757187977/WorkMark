@@ -1,97 +1,95 @@
 package demo.calcite;
 
+import lombok.Data;
+import org.apache.calcite.sql.SqlBasicCall;
 import org.apache.calcite.sql.SqlCall;
 import org.apache.calcite.sql.SqlDataTypeSpec;
 import org.apache.calcite.sql.SqlDynamicParam;
 import org.apache.calcite.sql.SqlIdentifier;
 import org.apache.calcite.sql.SqlIntervalQualifier;
+import org.apache.calcite.sql.SqlJoin;
 import org.apache.calcite.sql.SqlLiteral;
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.SqlNodeList;
-import org.apache.calcite.sql.SqlOperator;
-import org.apache.calcite.sql.util.SqlVisitor;
+import org.apache.calcite.sql.SqlOrderBy;
+import org.apache.calcite.sql.SqlSelect;
+import org.apache.calcite.sql.util.SqlBasicVisitor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description Visitor.
  * @Author lishoupeng
  * @Date 2022/12/28 15:17
  */
-public class Visitor implements SqlVisitor<Void> {
+@Data
+public class Visitor extends SqlBasicVisitor<SqlNode> {
 
-    /**
-     * Visits a literal.
-     *
-     * @param literal Literal
-     * @see SqlLiteral#accept(SqlVisitor)
-     */
+    List<String> selectTableNames = new ArrayList<>();
+    List<String> selectColumnNames = new ArrayList<>();
+    List<String> whereColumnNames = new ArrayList<>();
+    List<String> orderByColumnNames = new ArrayList<>();
+
     @Override
-    public Void visit(SqlLiteral literal) {
-        return null;
+    public SqlNode visit(SqlLiteral literal) {
+        return super.visit(literal);
     }
 
-    /**
-     * Visits a call to a {@link SqlOperator}.
-     *
-     * @param call Call
-     * @see SqlCall#accept(SqlVisitor)
-     */
     @Override
-    public Void visit(SqlCall call) {
-        return null;
+    public SqlNode visit(SqlCall call) {
+        switch (call.getKind()) {
+            case SELECT:
+                SqlSelect sqlSelect = (SqlSelect) call;
+                sqlSelect.getFrom().accept(this);
+                List<SqlNode> selectNodes = sqlSelect.getSelectList().getList();
+                for (SqlNode sqlNode : selectNodes) {
+                    selectColumnNames.add(sqlNode.toString());
+                }
+                for (SqlNode sqlNode : ((SqlBasicCall) sqlSelect.getWhere()).operands) {
+                    whereColumnNames.add(sqlNode.toString());
+                }
+                break;
+            case ORDER_BY:
+                SqlOrderBy sqlOrderBy = (SqlOrderBy) call;
+                for (SqlNode sqlNode : sqlOrderBy.orderList.getList()) {
+                    orderByColumnNames.add(sqlNode.toString());
+                }
+                break;
+            case JOIN:
+                SqlJoin sqlJoin = (SqlJoin) call;
+                selectTableNames.add(sqlJoin.getLeft().toString());
+                selectTableNames.add(sqlJoin.getRight().toString());
+                break;
+            default:
+                break;
+        }
+        return super.visit(call);
     }
 
-    /**
-     * Visits a list of {@link SqlNode} objects.
-     *
-     * @param nodeList list of nodes
-     * @see SqlNodeList#accept(SqlVisitor)
-     */
     @Override
-    public Void visit(SqlNodeList nodeList) {
-        return null;
+    public SqlNode visit(SqlNodeList nodeList) {
+        return super.visit(nodeList);
     }
 
-    /**
-     * Visits an identifier.
-     *
-     * @param id identifier
-     * @see SqlIdentifier#accept(SqlVisitor)
-     */
     @Override
-    public Void visit(SqlIdentifier id) {
-        return null;
+    public SqlNode visit(SqlIdentifier id) {
+        return super.visit(id);
     }
 
-    /**
-     * Visits a datatype specification.
-     *
-     * @param type datatype specification
-     * @see SqlDataTypeSpec#accept(SqlVisitor)
-     */
     @Override
-    public Void visit(SqlDataTypeSpec type) {
-        return null;
+    public SqlNode visit(SqlDataTypeSpec type) {
+        return super.visit(type);
     }
 
-    /**
-     * Visits a dynamic parameter.
-     *
-     * @param param Dynamic parameter
-     * @see SqlDynamicParam#accept(SqlVisitor)
-     */
     @Override
-    public Void visit(SqlDynamicParam param) {
-        return null;
+    public SqlNode visit(SqlDynamicParam param) {
+        return super.visit(param);
     }
 
-    /**
-     * Visits an interval qualifier
-     *
-     * @param intervalQualifier Interval qualifier
-     * @see SqlIntervalQualifier#accept(SqlVisitor)
-     */
     @Override
-    public Void visit(SqlIntervalQualifier intervalQualifier) {
-        return null;
+    public SqlNode visit(SqlIntervalQualifier intervalQualifier) {
+        return super.visit(intervalQualifier);
     }
+
 }
