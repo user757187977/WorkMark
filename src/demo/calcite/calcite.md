@@ -50,10 +50,23 @@ public class Test {
         SqlParser parser = SqlParser.create(sql, SqlParser.Config.DEFAULT);
         return parser.parseStmt();
     }
+
+    public static void main(String[] args) {
+        SqlNode sqlNode = Test.parse("");
+        System.out.println(sqlNode.toString());
+        // accept 访问者模式
+        sqlNode.accept(SqlVisitor < R > visitor);
+    }
 }
 ```
 
-[源码](https://github.com/user757187977/WorkMark/blob/master/src/demo/calcite/CBOTest.java#L81) 入口 
+设计模式: [访问者](https://github.com/user757187977/WorkMark/blob/master/src/mark/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.md) 模式
+
+[源码](./CBOTest.java) 入口
+
+![img.png](img/img4.png)
+
+
 ### Validate
 
 ### Optimize

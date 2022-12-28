@@ -131,6 +131,10 @@ public class CBOTest {
         SqlNode parsedSqlNode = parse(sql);
         System.out.println("The SqlNode after parsed is:" + parsedSqlNode.toString());
 
+        Visitor visitor = new Visitor();
+        parsedSqlNode.accept(visitor);
+        System.out.println(visitor);
+
         SqlValidator sqlValidator = createValidator();
         SqlNode validatedSqlNode = validate(parsedSqlNode, sqlValidator);
         System.out.println("The SqlNode after validated is:" + validatedSqlNode.toString());
