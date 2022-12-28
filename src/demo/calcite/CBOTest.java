@@ -139,10 +139,10 @@ public class CBOTest {
         Visitor visitor = new Visitor();
         parsedSqlNode.accept(visitor);
         System.out.println("The SqlNode after parsed is:" + parsedSqlNode);
-        System.out.println(visitor.getOrderByColumnNames());
-        System.out.println(visitor.getSelectColumnNames());
-        System.out.println(visitor.getSelectTableNames());
-        System.out.println(visitor.getWhereColumnNames());
+        System.out.println("orderBy: " + visitor.getOrderByColumnNames());
+        System.out.println("select: " + visitor.getSelectColumnNames());
+        System.out.println("tables: " + visitor.getSelectTableNames());
+        System.out.println("where: " + visitor.getWhereColumnNames());
 
         SqlValidator sqlValidator = createValidator();
         SqlNode validatedSqlNode = validate(parsedSqlNode, sqlValidator);

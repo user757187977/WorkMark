@@ -41,25 +41,21 @@ public class Visitor extends SqlBasicVisitor<SqlNode> {
         switch (call.getKind()) {
             case SELECT:
                 SqlSelect sqlSelect = (SqlSelect) call;
-                sqlSelect.getFrom().accept(this);
-                List<SqlNode> selectNodes = sqlSelect.getSelectList().getList();
-                for (SqlNode sqlNode : selectNodes) {
+                for (SqlNode sqlNode : sqlSelect.getSelectList().getList()) {
                     selectColumnNames.add(sqlNode.toString());
                 }
                 for (SqlNode sqlNode : ((SqlBasicCall) sqlSelect.getWhere()).operands) {
                     whereColumnNames.add(sqlNode.toString());
                 }
+                SqlNode fromNode = sqlSelect.getFrom();
+                selectTableNames.add(((SqlJoin) fromNode).getLeft().toString());
+                selectTableNames.add(((SqlJoin) fromNode).getRight().toString());
                 break;
             case ORDER_BY:
                 SqlOrderBy sqlOrderBy = (SqlOrderBy) call;
                 for (SqlNode sqlNode : sqlOrderBy.orderList.getList()) {
                     orderByColumnNames.add(sqlNode.toString());
                 }
-                break;
-            case JOIN:
-                SqlJoin sqlJoin = (SqlJoin) call;
-                selectTableNames.add(sqlJoin.getLeft().toString());
-                selectTableNames.add(sqlJoin.getRight().toString());
                 break;
             default:
                 break;

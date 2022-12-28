@@ -26,7 +26,7 @@
 
 `Java Compiler Compiler (JavaCC) is the most popular parser generator for use with Java applications.`
 
-javacc 是一个 语法词法 解析器的生成器, 是个 **生成器**, javacc 解析过程的本质也是利用 正则.
+javacc 是一个 语法词法 解析器的生成器, 是个 **生成器**, 生成完整的一套解析工具, 解析过程的本质也是利用 正则.
 
 * 语法解析: parsing
 * 词法解析: 将每一个字符串解析成一个个标识符(Token)
