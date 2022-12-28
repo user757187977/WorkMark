@@ -1,9 +1,9 @@
-# [calcite](https://calcite.apache.org/) The foundation for your next high-performance database.
+# [calcite](https://calcite.apache.org/)
 
 `The foundation for your next high-performance database.`
 
 1. Standard SQL: 行业通用的 SQL 解析 与 验证.
-2. Query optimization: 以关系代数表示查询, 基于 RBO 和 CBO 两种规则对关系代数进行优化.
+2. Query optimization: 以关系代数表示查询, 基于 RBO 和 CBO 两种规则对关系表达式进行优化.
 3. Any data, anywhere: 连接第三方数据源, 元数据.
 
 # 处理流程
@@ -37,8 +37,9 @@ javacc 的关键还是清楚地理解规则的定义, 以一个四则运算计�
 
 ![img.png](img/img3.png)
 
-详见 [.jj](https://github.com/user757187977/WorkMark/blob/master/src/demo/calcite/javacc/Calculator.jj) 文件 画清楚 语法树
-是帮助理清思路的重要方法.
+详见 [.jj](./javacc/Calculator.jj) 文件 
+
+画清楚 **语法树** 是帮助理清思路的重要方法.
 
 深入了解可以阅读 calcite 的 [Parser.jj](https://github.com/apache/calcite/blob/master/core/src/main/codegen/templates/Parser.jj)
 
@@ -60,7 +61,7 @@ public class Test {
 }
 ```
 
-设计模式: [访问者](https://github.com/user757187977/WorkMark/blob/master/src/mark/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.md) 模式
+设计模式: [访问者](../../mark/设计模式.md) 模式
 
 [源码](./CBOTest.java) 入口
 
