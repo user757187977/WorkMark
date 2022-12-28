@@ -35,6 +35,11 @@ import org.apache.calcite.tools.RelBuilder;
 
 import java.util.Properties;
 
+/**
+ * @Description CBOTest.
+ * @Author lishoupeng
+ * @Date 2022/12/28 16:25
+ */
 public class CBOTest {
 
     private static final SchemaPlus schemaPlus = CalciteUtils.registerRootSchema();
