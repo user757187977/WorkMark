@@ -2,6 +2,6 @@
 
 ## [算法](./src/code/README.md)
 ## [组件](./src/demo)
-### [Calcite](./src/demo/calcite/calcite.md) The foundation for your next high-performance database.
-### [Curator](https://curator.apache.org/index.html) Guava is to Java what Curator is to Zookeeper
+### [Calcite](./src/demo/calcite/calcite.md)
+### [Curator](./src/demo/curator/curator.md)
 ## [笔记](./src/mark)

@@ -1,4 +1,4 @@
-# [calcite](https://calcite.apache.org/)
+# [calcite](https://calcite.apache.org/) The foundation for your next high-performance database.
 
 `The foundation for your next high-performance database.`
 
