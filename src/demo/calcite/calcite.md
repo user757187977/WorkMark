@@ -6,8 +6,14 @@
 2. Query optimization: 以关系代数表示查询, 基于 RBO 和 CBO 两种规则对关系表达式进行优化.
 3. Any data, anywhere: 连接第三方数据源, 元数据.
 
-# 处理流程
+# calcite 的意义
+`calcite 对我有什么意义? 流行在哪? `
 
+![img.png](img/img8.png)
+
+在一般的数据库管理系统中, 涉及这 5 个模块, calcite 专注于绿色的 3 个模块.
+
+# 处理流程
 `Calcite 到底如何贯穿了整个查询过程?`
 
 ![img.png](img/img.png)
@@ -29,19 +35,20 @@
 javacc 是一个 语法词法 解析器的生成器, 是个 **生成器**, 生成完整的一套解析工具, 解析过程的本质也是利用 正则.
 
 * 语法解析: parsing
-* 词法解析: 将每一个字符串解析成一个个标识符(Token)
+* 词法解析: 
+  * 将每一个字符串解析成一个个标识符(Token)
+  * 例: c 语言解析成 token 
 
-例: c 语言解析成 token
-
-javacc 的关键还是清楚地理解规则的定义, 以一个四则运算计算器为例
+以一个四则运算表达式为例, 了解 javacc 如何参与到解析过程
 
 ![img.png](img/img3.png)
+1. [.jj](./javacc/Calculator.jj) 文件;
+   1. jj 文件的编写过程是思路的实现, 画清楚 **语法树** 是帮助理清思路的重要方法.
+2. ```shell javacc xxx.jj```
+3. 生成工具类 ![img.png](img/img6.png)
+4. 四则运算计算器使用[入口](./javacc/test/Test.java)
 
-详见 [.jj](./javacc/Calculator.jj) 文件 
-
-画清楚 **语法树** 是帮助理清思路的重要方法.
-
-深入了解可以阅读 calcite 的 [Parser.jj](https://github.com/apache/calcite/blob/master/core/src/main/codegen/templates/Parser.jj)
+有了四则运算的例子, 可以深入了解 calcite 的 [Parser.jj](https://github.com/apache/calcite/blob/master/core/src/main/codegen/templates/Parser.jj)
 
 ##### calcite 的 parser 过程
 
@@ -61,15 +68,17 @@ public class Test {
 }
 ```
 
-![img.png](img/img4.png)
+以 [CBOTest](./CBOTest.java) 为例
 
-[源码](./CBOTest.java) 入口
+解析过程: ![img.png](img/img4.png)
 
-解析的结果: ![img.png](img/img5.png)
+解析结果: ![img.png](img/img5.png)
 
-延伸: [访问者](../../mark/设计模式.md)设计模式
+结合 [Visitor](./Visitor.java)([访问者](../../mark/设计模式.md)设计模式): ![img.png](img/img7.png)
 
 ### Validate
+
+通过上面的 Parser 过程会生成一个 SqlNode 对象, 接下来对它进行语法检查阶段, 语法检查的前提就是元数据(表名, 字段名, 字段类型, 函数名...)
 
 ### Optimize
 

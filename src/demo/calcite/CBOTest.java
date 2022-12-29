@@ -78,6 +78,7 @@ public class CBOTest {
 
     public static SqlValidator createValidator() {
         return SqlValidatorUtil.newValidator(
+                // standard
                 SqlStdOperatorTable.instance(),
                 calciteCatalogReader,
                 factory,
@@ -139,6 +140,8 @@ public class CBOTest {
         Visitor visitor = new Visitor();
         parsedSqlNode.accept(visitor);
         System.out.println("The SqlNode after parsed is:" + parsedSqlNode);
+        System.out.println("The raw sql: " + sql);
+        System.out.println("------------------------");
         System.out.println("orderBy: " + visitor.getOrderByColumnNames());
         System.out.println("select: " + visitor.getSelectColumnNames());
         System.out.println("tables: " + visitor.getSelectTableNames());

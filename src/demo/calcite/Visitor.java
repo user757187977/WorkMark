@@ -8,6 +8,7 @@ import org.apache.calcite.sql.SqlDynamicParam;
 import org.apache.calcite.sql.SqlIdentifier;
 import org.apache.calcite.sql.SqlIntervalQualifier;
 import org.apache.calcite.sql.SqlJoin;
+import org.apache.calcite.sql.SqlKind;
 import org.apache.calcite.sql.SqlLiteral;
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.SqlNodeList;
@@ -48,8 +49,11 @@ public class Visitor extends SqlBasicVisitor<SqlNode> {
                     whereColumnNames.add(sqlNode.toString());
                 }
                 SqlNode fromNode = sqlSelect.getFrom();
-                selectTableNames.add(((SqlJoin) fromNode).getLeft().toString());
-                selectTableNames.add(((SqlJoin) fromNode).getRight().toString());
+                if (SqlKind.JOIN.equals(fromNode.getKind())) {
+                    SqlJoin sqlJoin = (SqlJoin) fromNode;
+                    selectTableNames.add(sqlJoin.getLeft().toString());
+                    selectTableNames.add(sqlJoin.getRight().toString());
+                }
                 break;
             case ORDER_BY:
                 SqlOrderBy sqlOrderBy = (SqlOrderBy) call;
