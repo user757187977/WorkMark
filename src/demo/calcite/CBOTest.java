@@ -26,6 +26,7 @@ import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.sql.type.SqlTypeFactoryImpl;
+import org.apache.calcite.sql.validate.SqlConformanceEnum;
 import org.apache.calcite.sql.validate.SqlValidator;
 import org.apache.calcite.sql.validate.SqlValidatorUtil;
 import org.apache.calcite.sql2rel.RelDecorrelator;
@@ -77,12 +78,19 @@ public class CBOTest {
     }
 
     public static SqlValidator createValidator() {
+        /**
+         * https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/sql/validate/SqlValidatorUtil.html
+         *
+         * SqlOperatorTable defines a directory interface for enumerating and looking up SQL operators and functions. --查找 SQL 运算符和函数
+         * presenting the repository information of interest to the validator. --向验证者展示感兴趣的存储库信息
+         * RelDataTypeFactory is a factory for datatype descriptors. --数据类型描述符的工厂
+         * Enumeration of valid SQL compatibility modes. --枚举有效的 SQL 兼容模式
+         */
         return SqlValidatorUtil.newValidator(
-                // standard
                 SqlStdOperatorTable.instance(),
                 calciteCatalogReader,
-                factory,
-                CalciteUtils.conformance(frameworkConfig)
+                new SqlTypeFactoryImpl(RelDataTypeSystem.DEFAULT),
+                SqlConformanceEnum.DEFAULT
         );
     }
 
@@ -130,7 +138,7 @@ public class CBOTest {
     }
 
     public static void main(String[] args) throws SqlParseException {
-
+        // users 表的字段叫 id, 这里特意写成 ids, 看下验证的逻辑
         String sql = "select u.id as user_id, u.name as user_name, j.company as user_company, u.age as user_age " +
                 "from users u join jobs j on u.id=j.id " +
                 "where u.age > 30 and j.id > 10 " +

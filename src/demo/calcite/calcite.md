@@ -14,7 +14,7 @@
 在一般的数据库管理系统中, 涉及这 5 个模块, calcite 专注于绿色的 3 个模块.
 
 # 处理流程
-`Calcite 到底如何贯穿了整个查询过程?`
+`calcite 如何贯穿了整个查询过程?`
 
 ![img.png](img/img.png)
 
@@ -23,6 +23,10 @@
 3. 语义分析, 根据 SqlNode 及元信息构建 RelNode 树, 也就是最初版本的逻辑计划(Logical Plan);
 4. 逻辑计划优化, 优化器的核心, 根据前面生成的逻辑计划按照相应的规则(Rule)进行优化;
 5. 物理执行.
+
+# java DOC
+
+1.18.0 [DOC](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
 
 ### Parser
 
@@ -44,7 +48,7 @@ javacc 是一个 语法词法 解析器的生成器, 是个 **生成器**, 生�
 ![img.png](img/img3.png)
 1. [.jj](./javacc/Calculator.jj) 文件;
    1. jj 文件的编写过程是思路的实现, 画清楚 **语法树** 是帮助理清思路的重要方法.
-2. ```shell javacc xxx.jj```
+2. ```javacc xx.jj```
 3. 生成工具类 ![img.png](img/img6.png)
 4. 四则运算计算器使用[入口](./javacc/test/Test.java)
 
@@ -68,7 +72,7 @@ public class Test {
 }
 ```
 
-以 [CBOTest](./CBOTest.java) 为例
+以 [CBOTest](./CBOTest.java)#demo.calcite.CBOTest.parse 为例
 
 解析过程: ![img.png](img/img4.png)
 
@@ -79,6 +83,15 @@ public class Test {
 ### Validate
 
 通过上面的 Parser 过程会生成一个 SqlNode 对象, 接下来对它进行语法检查阶段, 语法检查的前提就是元数据(表名, 字段名, 字段类型, 函数名...)
+
+结合 [calcite java doc - 1.18.0](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html) 
+与我们的调用代码 [validate](./CBOTest.java)#demo.calcite.CBOTest.validate 看一次验证的过程
+
+通过验证器的构造函数, 发现 SqlNode 验证的就是 SQL 运算符(函数)/catalog/数据类型/SQL 兼容模式
+
+验证过程: ![img.png](img/img9.png)
+
+验证结果: ![img.png](img/img10.png)
 
 ### Optimize
 
