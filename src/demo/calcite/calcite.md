@@ -8,7 +8,6 @@
 
 # calcite 的意义
 `calcite 对我有什么意义? 流行在哪? `
-![img.png](img.png)
 ![img.png](img/img8.png)
 
 在一般的数据库管理系统中, 涉及这 5 个模块, calcite 专注于绿色的 3 个模块.
@@ -72,7 +71,7 @@ public class Test {
 }
 ```
 
-以 [CBOTest](./CBOTest.java)#demo.calcite.CBOTest.parse 为例
+以 [CBOTest](./CBOTest.java)._parse()_ 为例
 
 解析过程: ![img.png](img/img4.png)
 
@@ -85,7 +84,7 @@ public class Test {
 通过上面的 Parser 过程会生成一个 SqlNode 对象, 接下来对它进行语法检查阶段, 语法检查的前提就是元数据(表名, 字段名, 字段类型, 函数名...)
 
 结合 [calcite java doc - 1.18.0](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html) 
-与我们的调用代码 [validate](./CBOTest.java)#demo.calcite.CBOTest.validate 看一次验证的过程
+与我们的调用代码 [validate](./CBOTest.java)._validate()_ 看一次验证的过程
 
 通过验证器的构造函数, 发现 SqlNode 验证的就是 SQL 运算符(函数)/catalog/数据类型/SQL 兼容模式
 
@@ -93,7 +92,38 @@ public class Test {
 
 验证结果: 特意写错字段名字测试一下 ![img.png](img/img10.png)
 
+### Parser & Validate 总结:
+
+`一图胜万言`
+![img.png](img/img11.png)
+
 ### Optimize
+
+关于优化我们直接查看代码: [**CBOTest**](./CBOTest.java)._relNodeFindBestExp()_.
+
+那么在 Calcite 中是怎么完成优化的呢?
+
+`Finds the most efficient expression to implement the query given via RelOptPlanner.setRoot(org.apache.calcite.rel.RelNode).`
+
+这一部分中我们需要两个对象, 
+1. [**RelNode**](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/rel/RelNode.html)
+2. [**Planner**](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/plan/volcano/VolcanoPlanner.html)
+
+对应的问题:
+* Q1: 那么 RelNode 是什么? 在上一 part 中, 我们都是对 SqlNode 进行操作(Parser/Validate), 现在我该如何提供 RelNode, SqlNode 是否可以又是如何转换为 RelNode? 
+* Q2: 如何创建一个 Planner? 
+* Q3: Planner 是如何 findBestExp() 的? 
+
+##### 语义分析
+
+SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑计划(Logical Plan)的过程.
+
+* SqlNode: A SqlNode is a SQL parse tree.
+* RelNode: A RelNode is a relational expression.
+* RexNode: Row expression.
+
+[SqlToRelConverter](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/sql2rel/SqlToRelConverter.html):
+Converts a SQL parse tree (consisting of SqlNode objects) into a relational algebra expression (consisting of RelNode objects).
 
 ##### 优化的根本: 关系代数
 
@@ -106,7 +136,7 @@ public class Test {
 
 SQL -> 关系代数 -> 优化关系表达式
 
-##### 优化器的实现
+##### 优化器(Planner)的实现
 
 * 基于规则的优化(Rule-Based Optimizer，RBO)
     * 根据优化规则对关系表达式进行转换, 这里的转换是说一个关系表达式经过优化规则后会变成另外一个关系表达式, 同时原有表达式会被裁剪掉, 经过一系列转换后生成最终的执行计划.

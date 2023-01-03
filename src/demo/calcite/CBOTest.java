@@ -104,7 +104,9 @@ public class CBOTest {
     }
 
     public static RelNode sQLNode2RelNode(SqlNode sqlNode, SqlValidator sqlValidator, VolcanoPlanner planner) {
+        // 初始化 RexBuilder
         final RexBuilder rexBuilder = CalciteUtils.createRexBuilder(factory);
+        // 初始化 RelOptCluster
         final RelOptCluster cluster = RelOptCluster.create(planner, rexBuilder);
 
         // init SqlToRelConverter config
@@ -113,7 +115,7 @@ public class CBOTest {
                 .withTrimUnusedFields(false)
                 .withConvertTableAccess(false)
                 .build();
-        // SqlNode toRelNode
+        // 初始化 SqlToRelConverter
         final SqlToRelConverter sqlToRelConverter = new SqlToRelConverter(
                 new CalciteUtils.ViewExpanderImpl(),
                 sqlValidator,
@@ -122,6 +124,8 @@ public class CBOTest {
                 frameworkConfig.getConvertletTable(),
                 config
         );
+
+        // !!!
         RelRoot relRoot = sqlToRelConverter.convertQuery(sqlNode, false, true);
 
         relRoot = relRoot.withRel(sqlToRelConverter.flattenTypes(relRoot.rel, true));
@@ -130,15 +134,25 @@ public class CBOTest {
         return relRoot.rel;
     }
 
+    /**
+     * relNodeFindBestExp.
+     * @param relNode https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/rel/RelNode.html
+     * @param planner https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/plan/volcano/VolcanoPlanner.html
+     * @return RelNode
+     */
     public static RelNode relNodeFindBestExp(RelNode relNode, VolcanoPlanner planner) {
         RelTraitSet desiredTraits = relNode.getCluster().traitSet().replace(EnumerableConvention.INSTANCE);
+        // 特征转化
         relNode = planner.changeTraits(relNode, desiredTraits);
+        // From Doc: Finds the most efficient expression to implement the query given via RelOptPlanner.setRoot(org.apache.calcite.rel.RelNode).
+        // Trans: 对于给定的 Root 寻找最有效的表达式来实现查询
+        // 这个 setRoot 的入参是 RelNode
         planner.setRoot(relNode);
         return planner.findBestExp();
     }
 
     public static void main(String[] args) throws SqlParseException {
-        // users 表的字段叫 id, 这里特意写成 ids, 看下验证的逻辑
+        // users 表的字段叫 id, 可以特意写成 ids, 触发下 demo.calcite.CBOTest.validate() 的报错
         String sql = "select u.id as user_id, u.name as user_name, j.company as user_company, u.age as user_age " +
                 "from users u join jobs j on u.id=j.id " +
                 "where u.age > 30 and j.id > 10 " +
