@@ -8,7 +8,7 @@
 
 # calcite 的意义
 `calcite 对我有什么意义? 流行在哪? `
-
+![img.png](img.png)
 ![img.png](img/img8.png)
 
 在一般的数据库管理系统中, 涉及这 5 个模块, calcite 专注于绿色的 3 个模块.
@@ -26,7 +26,7 @@
 
 # java DOC
 
-1.18.0 [DOC](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
+Demo 基于 1.18.0 [DOC](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
 
 ### Parser
 
@@ -91,7 +91,7 @@ public class Test {
 
 验证过程: ![img.png](img/img9.png)
 
-验证结果: ![img.png](img/img10.png)
+验证结果: 特意写错字段名字测试一下 ![img.png](img/img10.png)
 
 ### Optimize
 
