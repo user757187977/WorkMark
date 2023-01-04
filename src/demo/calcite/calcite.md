@@ -94,38 +94,56 @@ public class Test {
 
 ### Parser & Validate 总结:
 
-`一图胜万言`
 ![img.png](img/img11.png)
 
 ### Optimize
 
 关于优化我们直接查看代码: [**CBOTest**](./CBOTest.java)._relNodeFindBestExp()_.
 
-那么在 Calcite 中是怎么完成优化的呢?
+那么 planner.findBestExp() 是怎么完成优化的呢?
 
 `Finds the most efficient expression to implement the query given via RelOptPlanner.setRoot(org.apache.calcite.rel.RelNode).`
+
+也就是优化器我们指定 root 一个 RelNode 便可以寻找最高效解析器了.
 
 这一部分中我们需要两个对象, 
 1. [**RelNode**](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/rel/RelNode.html)
 2. [**Planner**](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/plan/volcano/VolcanoPlanner.html)
 
 对应的问题:
-* Q1: 那么 RelNode 是什么? 在上一 part 中, 我们都是对 SqlNode 进行操作(Parser/Validate), 现在我该如何提供 RelNode, SqlNode 是否可以又是如何转换为 RelNode? 
-* Q2: 如何创建一个 Planner? 
-* Q3: Planner 是如何 findBestExp() 的? 
+* Q1: 那么 RelNode 是什么? 在上一 part 中, 我们都是对 SqlNode 进行操作(Parser/Validate), 现在我该如何提供 RelNode? SqlNode 是否可以又是如何转换为 RelNode? 
+* Q2: 如何创建一个 Planner? Planner 是如何 findBestExp() 的? 
 
 ##### 语义分析
+`这里专门解释上面的 Q1`
 
-SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑计划(Logical Plan)的过程.
+那么是如何完成转换的过程? 通过[搜索](https://www.google.com/search?q=sqlnode+relnode+calcite) 我们可以找到这样的文档: 
+
+[SqlToRelConverter](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/sql2rel/SqlToRelConverter.html):
+Converts a SQL parse tree (consisting of SqlNode objects) into a relational algebra expression (consisting of RelNode objects).
 
 * SqlNode: A SqlNode is a SQL parse tree.
 * RelNode: A RelNode is a relational expression.
 * RexNode: Row expression.
 
-[SqlToRelConverter](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/sql2rel/SqlToRelConverter.html):
-Converts a SQL parse tree (consisting of SqlNode objects) into a relational algebra expression (consisting of RelNode objects).
+SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑计划(Logical Plan)的过程.
+
+结合 [**CBOTest**](./CBOTest.java)._sQLNode2RelNode()_ 我们来看 SqlNode -> RelNode 的过程.
+
+1. org.apache.calcite.sql2rel.SqlToRelConverter.convertQuery: Converts an unvalidated query's parse tree into a relational expression.
+2. org.apache.calcite.sql2rel.SqlToRelConverter.convertQueryRecursive: Recursively converts a query to a relational expression.
+3. org.apache.calcite.sql2rel.SqlToRelConverter.convertSelect: Converts a SELECT statement's parse tree into a relational expression.
+4. org.apache.calcite.sql2rel.SqlToRelConverter.convertSelectImpl: 真正实现 convertSelect, 逐渐执行:
+   1. convertFrom
+   2. convertWhere
+   3. convertSelectList
+   4. ... ...
+5. 上面执行的这些 convertXXX 操作就是在生成 LogicalProject 逻辑计划 ![img.png](img/img12.png)
+6. 最终我们生成的 ![img.png](img/img13.png)
 
 ##### 优化的根本: 关系代数
+
+`这里专门解释上面的 Q2`
 
 `
 关系代数是关系型数据库操作的理论基础, 同样也是 calcite 优化模块的核心, 我们常说的 SQL 也仅仅是关系代数运算的一种常用的实现方式而已(并不是唯一方式); 

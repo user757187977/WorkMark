@@ -125,12 +125,14 @@ public class CBOTest {
                 config
         );
 
-        // !!!
+        // ============重要============
+        // SqlNode -> RelNode
+        // ============结束============
         RelRoot relRoot = sqlToRelConverter.convertQuery(sqlNode, false, true);
-
+        // 进行一次扁平化处理
         relRoot = relRoot.withRel(sqlToRelConverter.flattenTypes(relRoot.rel, true));
-        final RelBuilder relBuilder = config.getRelBuilderFactory().create(cluster, null);
-        relRoot = relRoot.withRel(RelDecorrelator.decorrelateQuery(relRoot.rel, relBuilder));
+        // final RelBuilder relBuilder = config.getRelBuilderFactory().create(cluster, null);
+        // relRoot = relRoot.withRel(RelDecorrelator.decorrelateQuery(relRoot.rel, relBuilder));
         return relRoot.rel;
     }
 
