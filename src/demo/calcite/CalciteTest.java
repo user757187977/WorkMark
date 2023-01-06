@@ -10,6 +10,8 @@ import org.apache.calcite.plan.ConventionTraitDef;
 import org.apache.calcite.plan.RelOptCluster;
 import org.apache.calcite.plan.RelOptUtil;
 import org.apache.calcite.plan.RelTraitSet;
+import org.apache.calcite.plan.hep.HepPlanner;
+import org.apache.calcite.plan.hep.HepProgramBuilder;
 import org.apache.calcite.plan.volcano.VolcanoPlanner;
 import org.apache.calcite.prepare.CalciteCatalogReader;
 import org.apache.calcite.rel.RelDistributionTraitDef;
@@ -43,7 +45,8 @@ import java.util.Properties;
  * @Date 2022/12/28 16:25
  */
 @Data
-public class CBOTest {
+public class CalciteTest {
+
 
     private static final SchemaPlus schemaPlus = CalciteUtils.registerRootSchema();
     private static final SqlTypeFactoryImpl factory = new SqlTypeFactoryImpl(RelDataTypeSystem.DEFAULT);
@@ -59,7 +62,7 @@ public class CBOTest {
             .traitDefs(ConventionTraitDef.INSTANCE, RelDistributionTraitDef.INSTANCE)
             .build();
 
-    public static VolcanoPlanner createPlanner() {
+    public static VolcanoPlanner createVolcanoPlanner() {
         // use VolcanoPlanner
         VolcanoPlanner planner = new VolcanoPlanner();
         planner.addRelTraitDef(ConventionTraitDef.INSTANCE);
@@ -75,6 +78,14 @@ public class CBOTest {
         planner.addRule(EnumerableRules.ENUMERABLE_PROJECT_RULE);
         planner.addRule(EnumerableRules.ENUMERABLE_FILTER_RULE);
         return planner;
+    }
+
+    public static HepPlanner createHepPlanner() {
+        HepProgramBuilder hepProgramBuilder = new HepProgramBuilder();
+        hepProgramBuilder.addRuleInstance(FilterJoinRule.FILTER_ON_JOIN);
+        hepProgramBuilder.addRuleInstance(ReduceExpressionsRule.PROJECT_INSTANCE);
+        hepProgramBuilder.addRuleInstance(PruneEmptyRules.PROJECT_INSTANCE);
+        return new HepPlanner(hepProgramBuilder.build());
     }
 
     public static SqlValidator createValidator() {
@@ -131,18 +142,19 @@ public class CBOTest {
         RelRoot relRoot = sqlToRelConverter.convertQuery(sqlNode, false, true);
         // 进行一次扁平化处理
         relRoot = relRoot.withRel(sqlToRelConverter.flattenTypes(relRoot.rel, true));
-        // final RelBuilder relBuilder = config.getRelBuilderFactory().create(cluster, null);
-        // relRoot = relRoot.withRel(RelDecorrelator.decorrelateQuery(relRoot.rel, relBuilder));
+        final RelBuilder relBuilder = config.getRelBuilderFactory().create(cluster, null);
+        relRoot = relRoot.withRel(RelDecorrelator.decorrelateQuery(relRoot.rel, relBuilder));
         return relRoot.rel;
     }
 
     /**
      * relNodeFindBestExp.
+     *
      * @param relNode https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/rel/RelNode.html
      * @param planner https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/plan/volcano/VolcanoPlanner.html
      * @return RelNode
      */
-    public static RelNode relNodeFindBestExp(RelNode relNode, VolcanoPlanner planner) {
+    public static RelNode cBoRelNodeFindBestExp(RelNode relNode, VolcanoPlanner planner) {
         RelTraitSet desiredTraits = relNode.getCluster().traitSet().replace(EnumerableConvention.INSTANCE);
         // 特征转化
         relNode = planner.changeTraits(relNode, desiredTraits);
@@ -150,6 +162,13 @@ public class CBOTest {
         // Trans: 对于给定的 Root 寻找最有效的表达式来实现查询
         // 这个 setRoot 的入参是 RelNode
         planner.setRoot(relNode);
+        return planner.findBestExp();
+    }
+
+    public static RelNode rBoRelNodeFindBestExp(RelNode relNode, HepPlanner planner) {
+        // 构建图
+        planner.setRoot(relNode);
+        // 查找最佳解析表达式
         return planner.findBestExp();
     }
 
@@ -163,7 +182,7 @@ public class CBOTest {
         SqlNode parsedSqlNode = parse(sql);
         Visitor visitor = new Visitor();
         parsedSqlNode.accept(visitor);
-        System.out.println("The SqlNode after parsed is:" + parsedSqlNode);
+        System.out.println("Parser 之后的 SqlNode: " + parsedSqlNode);
         System.out.println("The raw sql: " + sql);
         System.out.println("------------------------");
         System.out.println("orderBy: " + visitor.getOrderByColumnNames());
@@ -173,13 +192,17 @@ public class CBOTest {
 
         SqlValidator sqlValidator = createValidator();
         SqlNode validatedSqlNode = validate(parsedSqlNode, sqlValidator);
-        System.out.println("The SqlNode after validated is:" + validatedSqlNode.toString());
+        System.out.println("验证之后的 SqlNode: " + validatedSqlNode.toString());
 
-        VolcanoPlanner planner = createPlanner();
-        RelNode relNode = sQLNode2RelNode(validatedSqlNode, sqlValidator, planner);
-        System.out.println("The relational expression string before optimized is:" + RelOptUtil.toString(relNode));
+        VolcanoPlanner volcanoPlanner = createVolcanoPlanner();
+        HepPlanner hepPlanner = createHepPlanner();
+        RelNode relNode = sQLNode2RelNode(validatedSqlNode, sqlValidator, volcanoPlanner);
+        System.out.println("RelNode: " + RelOptUtil.toString(relNode));
 
-        RelNode bestExpRelNode = relNodeFindBestExp(relNode, planner);
-        System.out.println("The Best relational expression string:" + RelOptUtil.toString(bestExpRelNode));
+        RelNode cBoBestExpRelNode = cBoRelNodeFindBestExp(relNode, volcanoPlanner);
+        System.out.println("CBO 优化后: " + RelOptUtil.toString(cBoBestExpRelNode));
+
+        RelNode rBoBestExpRelNode = rBoRelNodeFindBestExp(relNode, hepPlanner);
+        System.out.println("RBO 优化后: " + RelOptUtil.toString(rBoBestExpRelNode));
     }
 }
