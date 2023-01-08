@@ -3,7 +3,7 @@
 `The foundation for your next high-performance database.`
 
 1. Standard SQL: 行业通用的 SQL 解析 与 验证.
-2. Query optimization: 以关系代数表示查询, 基于 RBO 和 CBO 两种规则对关系表达式进行优化.
+2. Query optimization: 以关系代数表示 **查询**(仅仅是查询, 不包含 insert 什么的), 基于 RBO 和 CBO 两种规则对关系表达式进行优化.
 3. Any data, anywhere: 连接第三方数据源, 元数据.
 
 # calcite 的意义
