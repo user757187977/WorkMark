@@ -452,9 +452,11 @@ public static class FilterIntoJoinRule extends FilterJoinRule {
         relBuilder.push(newJoinRel);
 
         // Create a project on top of the join if some of the columns have become NOT NULL due to the join-type getting stricter.
+        // 在 join 之前创建一个计划, 如果一些列由于关联类型变成严格模式变成非空
         relBuilder.convert(join.getRowType(), false);
 
         // create a FilterRel on top of the join if needed
+        // 如果需要, 在 join 之前创建一个过滤表达式
         relBuilder.filter(RexUtil.fixUp(rexBuilder, aboveFilters, RelOptUtil.getFieldTypeList(relBuilder.peek().getRowType())));
 
         // relBuilder.build() 就是真正的放到 results 里的对象
