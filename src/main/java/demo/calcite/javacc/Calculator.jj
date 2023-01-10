@@ -1,0 +1,97 @@
+//可选配置参数
+options{
+     STATIC = false;
+     DEBUG_PARSER = true;//开启调试解析打印,默认是false
+     JDK_VERSION = "1.8";
+}
+//固定格式
+PARSER_BEGIN(Calculator)
+//像java一样的包名定义,生成的java文件会带上此包名
+package main.java.demo.calcite.javacc.test;
+import java.io.StringReader;
+
+public class Calculator {
+    //可以再里面定义初始化信息，字符串接收方式，异常处理..
+    public Calculator(String expr){
+         this(new StringReader(expr));
+    }
+
+}}
+
+}
+
+//固定格式
+PARSER_END(Calculator)
+
+//词法定义
+
+//SKIP是一种词法 要跳过忽略的字符串
+SKIP : { " " | "\t" | "\n" }
+
+TOKEN : {
+    <NUMBER : <DIGITS>
+      | <DIGITS> "." <DIGITS>
+     >
+  |
+    //#开头则表示内部Token,只可以在词法中使用，不能在语法中引用
+    <#DIGITS :(["0"-"9"])+>
+}
+
+TOKEN : {
+     < LPAREN: "(" >
+   | < RPAREN: ")" >
+   | < ADD : "+" >
+   | < SUBTRACT : "-" >
+   | < MULTIPLY : "*" >
+   | < DIVIDE : "/" >
+}
+//为了调试方便将换行定义为一个特殊的token
+TOKEN : { < EOL : "\n" | "\r" | "\r\n" > }
+//定义语法
+
+//解析一级树处理加减
+double calc():
+{
+ double left;
+ double right;
+}
+{
+  left = mutlOrDiv()
+  (<ADD>   right = mutlOrDiv() {left += right;}
+    | <SUBTRACT> right = mutlOrDiv() {left = left - right;}
+     )*
+
+  {
+     return left;
+   }
+}
+
+//解析二级树处理乘除
+double mutlOrDiv():
+{
+ double left;
+ double right;
+}
+{
+  left = parseBase()
+  (<MULTIPLY> right = parseBase() {left *= right ;}
+    | <DIVIDE> right = parseBase() {left = left/right;}
+     )*
+  {
+    return left;
+   }
+}
+
+//解析三级树
+double parseBase() :
+{
+ Token t = null;
+ double num;
+}
+{
+  t = <NUMBER> {return Double.parseDouble(t.image);}
+//处理括号里的四则
+ | <LPAREN> num = calc() <RPAREN> {return num;}
+ //处理负数
+ | <SUBTRACT> t = <NUMBER> {return 0-Double.parseDouble(t.image); }
+}
