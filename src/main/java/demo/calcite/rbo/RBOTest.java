@@ -1,7 +1,7 @@
-package main.java.demo.calcite.rbo;
+package demo.calcite.rbo;
 
-import main.java.demo.calcite.Visitor;
-import main.java.demo.calcite.utils.CalciteUtils;
+import demo.calcite.Visitor;
+import demo.calcite.utils.CalciteUtils;
 import lombok.Data;
 import org.apache.calcite.adapter.enumerable.EnumerableConvention;
 import org.apache.calcite.adapter.enumerable.EnumerableRules;

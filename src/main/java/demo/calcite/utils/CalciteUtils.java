@@ -1,4 +1,4 @@
-package main.java.demo.calcite.utils;
+package demo.calcite.utils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

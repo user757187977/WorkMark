@@ -1,4 +1,4 @@
-package main.java.demo.calcite.javacc.test;
+package demo.calcite.javacc.test;
 
 /**
  * @Description

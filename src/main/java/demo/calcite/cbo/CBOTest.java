@@ -1,8 +1,8 @@
-package main.java.demo.calcite.cbo;
+package demo.calcite.cbo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import main.java.demo.calcite.utils.CalciteUtils;
+import demo.calcite.utils.CalciteUtils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
