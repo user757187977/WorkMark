@@ -49,7 +49,7 @@ javacc 是一个 语法词法 解析器的生成器, 是个 **生成器**, 生�
    1. jj 文件的编写过程是思路的实现, 画清楚 **语法树** 是帮助理清思路的重要方法.
 2. ```javacc xx.jj```
 3. 生成工具类 ![img.png](img/img6.png)
-4. 四则运算计算器使用[入口](./javacc/test/Test.java)
+4. 四则运算计算器使用[入口](./javacc/test/JavaccTest.java)
 
 有了四则运算的例子, 可以深入了解 calcite 的 [Parser.jj](https://github.com/apache/calcite/blob/master/core/src/main/codegen/templates/Parser.jj)
 
@@ -77,7 +77,7 @@ public class Test {
 
 解析结果: ![img.png](img/img5.png)
 
-结合 [Visitor](./Visitor.java)([访问者](../../mark/设计模式.md)设计模式): ![img.png](img/img7.png)
+结合 [Visitor](./visitor/Visitor.java)([访问者](../../../../mark/设计模式.md)设计模式): ![img.png](img/img7.png)
 
 ### Validate
 
