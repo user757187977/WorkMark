@@ -31,9 +31,7 @@
 
 ## 3.1 java DOC
 
-[javacc](https://javacc.github.io/javacc/)
-
-`Java Compiler Compiler (JavaCC) is the most popular parser generator for use with Java applications.`
+[javacc](https://javacc.github.io/javacc/): `Java Compiler Compiler (JavaCC) is the most popular parser generator for use with Java applications.`
 
 javacc 是一个 语法词法 解析器的生成器, 是个 **生成器**, 生成完整的一套解析工具, 解析过程的本质也是利用 正则.
 
@@ -177,9 +175,9 @@ SQL -> 关系代数 -> 优化关系表达式
 3. 列裁剪 Column Pruning: 只保留需要列减少计算带来的消耗 ![img.png](img/img16.png)
 4. 其他
 
-知道了优化根本, 我们具体去看 HepPlanner / VolcanoPlanner
+知道了优化根本, 我们具体去看 calcite 中两个优化器: HepPlanner / VolcanoPlanner 的具体实现
 
-![img.png](img/img20.png)
+结构与继承关系: ![img.png](img/img20.png)
 
 ## 6.3 HepPlanner
 
