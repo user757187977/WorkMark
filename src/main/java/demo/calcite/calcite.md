@@ -128,7 +128,7 @@ Converts a SQL parse tree (consisting of SqlNode objects) into a relational alge
 * RelNode: A RelNode is a relational expression.
 * RexNode: Row expression.
 
-注: 这里正好解释了[第二章](../calcite/calcite.md#二.处理流程)留下的坑
+注: 这里正好解释了[第二章](../calcite/calcite.md#二处理流程)留下的坑
 
 SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑计划(Logical Plan)的过程.
 
