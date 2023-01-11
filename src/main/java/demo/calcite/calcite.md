@@ -165,6 +165,8 @@ SQL -> 关系代数 -> 优化关系表达式
 * 基于成本的优化(Cost-Based Optimizer，CBO)
     * CBO 的实现: VolcanoPlanner
 
+更详细的对于 CBO & RBO: 点击此[文章](http://hbasefly.com/2017/05/04/bigdata%EF%BC%8Dcbo/) 
+
 无论 RBO or CBO, 都遵循着同样地优化准则:
 
 1. 谓词下推 Predicate Pushdown: 提前 filter 减少数据量 ![img.png](img/img14.png)
@@ -474,5 +476,4 @@ fireRule 方法我们只列举 onMatch() 的一个实现, 以 FilterIntoJoinRule
 
 官方的测试类 [VolcanoPlannerTest](https://github.com/apache/calcite/blob/b9c2099ea92a575084b55a206efc5dd341c0df62/core/src/test/java/org/apache/calcite/plan/volcano/VolcanoPlannerTest.java)
 
-### Execute
-`省略...`
+既然是基于成本的优化器, 那就要给 calcite 一个计算成本的公式, 这里暂时不做详细介绍了, 大家直接看 [CBOTest](./cbo/CBOTest.java) 代码的解析过程就好了.

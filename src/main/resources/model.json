@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "defaultSchema": "DEMO",
+  "schemas": [
+    {
+      "name": "DEMO",
+      "type": "custom",
+      "factory": "demo.calcite.csv.CsvSchemaFactory",
+      "operand": {
+        "dataFile": "JOB.csv,INSTANCE.csv"
+      }
+    }
+  ]
+}

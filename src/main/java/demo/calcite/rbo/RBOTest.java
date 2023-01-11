@@ -1,6 +1,6 @@
 package demo.calcite.rbo;
 
-import demo.calcite.Visitor;
+import demo.calcite.visitor.Visitor;
 import demo.calcite.utils.CalciteUtils;
 import lombok.Data;
 import org.apache.calcite.adapter.enumerable.EnumerableConvention;
@@ -24,6 +24,7 @@ import org.apache.calcite.rel.rules.ReduceExpressionsRule;
 import org.apache.calcite.rel.type.RelDataTypeSystem;
 import org.apache.calcite.rex.RexBuilder;
 import org.apache.calcite.schema.SchemaPlus;
+import org.apache.calcite.sql.SqlExplainLevel;
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.apache.calcite.sql.parser.SqlParseException;
@@ -198,12 +199,14 @@ public class RBOTest {
         VolcanoPlanner volcanoPlanner = createVolcanoPlanner();
         HepPlanner hepPlanner = createHepPlanner();
         RelNode relNode = sQLNode2RelNode(validatedSqlNode, sqlValidator, volcanoPlanner);
-        System.out.println("RelNode: " + RelOptUtil.toString(relNode));
+        System.out.println("RelNode:");
+        System.out.println(RelOptUtil.toString(relNode, SqlExplainLevel.ALL_ATTRIBUTES));
 
 //        RelNode cBoBestExpRelNode = cBoRelNodeFindBestExp(relNode, volcanoPlanner);
 //        System.out.println("CBO 优化后: " + RelOptUtil.toString(cBoBestExpRelNode));
 
         RelNode rBoBestExpRelNode = rBoRelNodeFindBestExp(relNode, hepPlanner);
-        System.out.println("RBO 优化后: " + RelOptUtil.toString(rBoBestExpRelNode));
+        System.out.println("RBO 优化后:");
+        System.out.println(RelOptUtil.toString(rBoBestExpRelNode, SqlExplainLevel.ALL_ATTRIBUTES));
     }
 }

@@ -1,4 +1,4 @@
-package demo.calcite;
+package demo.calcite.visitor;
 
 import lombok.Data;
 import org.apache.calcite.sql.SqlBasicCall;

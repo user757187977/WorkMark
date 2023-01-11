@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 public class CalciteUtils {
@@ -74,7 +75,7 @@ public class CalciteUtils {
         Connection connection = null;
         try {
             URL url = CalciteUtils.class.getResource(filePath);
-            String str = URLDecoder.decode(url.toString(), "UTF-8");
+            String str = URLDecoder.decode(Objects.requireNonNull(url).toString(), "UTF-8");
             Properties info = new Properties();
             info.put("model", str.replace("file:", ""));
             connection = DriverManager.getConnection("jdbc:calcite:", info);
@@ -93,7 +94,12 @@ public class CalciteUtils {
 
             Map<String, Object> map = Maps.newLinkedHashMap();
             for (int i = 1; i < columnSize + 1; i++) {
-                map.put(metaData.getColumnLabel(i), resultSet.getObject(i));
+                try{
+                    map.put(metaData.getColumnLabel(i), resultSet.getObject(i));
+                }catch (Exception e ){
+                    System.out.println(i);
+                }
+
             }
             list.add(map);
         }
