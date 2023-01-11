@@ -6,13 +6,13 @@
 2. Query optimization: 以关系代数表示 **查询**(仅仅是查询, 不包含 insert 什么的), 基于 RBO 和 CBO 两种规则对关系表达式进行优化.
 3. Any data, anywhere: 连接第三方数据源, 元数据.
 
-# calcite 的意义
+# 一.calcite 的意义
 `calcite 对我有什么意义? 流行在哪? `
 ![img.png](img/img8.png)
 
 在一般的数据库管理系统中, 涉及这 5 个模块, calcite 专注于绿色的 3 个模块.
 
-# 处理流程
+# 二.处理流程
 `calcite 如何贯穿了整个查询过程?`
 
 ![img.png](img/img.png)
@@ -23,15 +23,15 @@
 4. 逻辑计划优化, 优化器的核心, 根据前面生成的逻辑计划按照相应的规则(Rule)进行优化;
 5. 物理执行.
 
-# java DOC
+注: 在这里可能大家对于 SqlNode RelNode LogicalPlan 或者 什么是 Rule 可能都不清楚, 没关系, 往下继续看, [第六章](../calcite/calcite.md#六.Optimize)会解释这些的.
 
-Demo 基于 1.18.0 [DOC](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
-
-### Parser
+# 三.Parser
 
 `Calcite 使用 javacc 做 语义 词义 解析.`
 
-##### [javacc](https://javacc.github.io/javacc/)
+## 3.1 java DOC
+
+[javacc](https://javacc.github.io/javacc/)
 
 `Java Compiler Compiler (JavaCC) is the most popular parser generator for use with Java applications.`
 
@@ -53,7 +53,9 @@ javacc 是一个 语法词法 解析器的生成器, 是个 **生成器**, 生�
 
 有了四则运算的例子, 可以深入了解 calcite 的 [Parser.jj](https://github.com/apache/calcite/blob/master/core/src/main/codegen/templates/Parser.jj)
 
-##### calcite 的 parser 过程
+Demo 基于 1.18.0 [DOC](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
+
+## 3.2 calcite 的 parser 过程
 
 ```java
 public class Test {
@@ -77,9 +79,9 @@ public class Test {
 
 解析结果: ![img.png](img/img5.png)
 
-结合 [Visitor](./visitor/Visitor.java)([访问者](../../../../mark/设计模式.md)设计模式): ![img.png](img/img7.png)
+结合 [Visitor](./visitor/Visitor.java)([访问者](../../../../mark/设计模式.md)设计模式) 可以获取到这样的结果: ![img.png](img/img7.png)
 
-### Validate
+# 四.Validate
 
 通过上面的 Parser 过程会生成一个 SqlNode 对象, 接下来对它进行语法检查阶段, 语法检查的前提就是元数据(表名, 字段名, 字段类型, 函数名...)
 
@@ -92,15 +94,15 @@ public class Test {
 
 验证结果: 特意写错字段名字测试一下 ![img.png](img/img10.png)
 
-### Parser & Validate 总结:
+# 五.Parser & Validate 总结:
 
 ![img.png](img/img11.png)
 
-### Optimize
+# 六.Optimize
 
-关于优化我们直接查看代码: [**CalciteTest**](./rbo/RBOTest.java)._cBoRelNodeFindBestExp()_.
+关于优化我们直接查看代码: [**CalciteTest**](./rbo/RBOTest.java)._rBoRelNodeFindBestExp()_.
 
-那么 planner.findBestExp() 是怎么完成优化的呢?
+这其中最关键的一行: planner.findBestExp() 是怎么完成优化的呢? 
 
 `Finds the most efficient expression to implement the query given via RelOptPlanner.setRoot(org.apache.calcite.rel.RelNode).`
 
@@ -108,13 +110,13 @@ public class Test {
 
 这一部分中我们需要两个对象, 
 1. [**RelNode**](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/rel/RelNode.html)
-2. [**Planner**](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/plan/volcano/VolcanoPlanner.html)
+2. [**Planner**](https://javadoc.io/static/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/plan/RelOptPlanner.html)
 
 对应的问题:
 * Q1: 那么 RelNode 是什么? 在上一 part 中, 我们都是对 SqlNode 进行操作(Parser/Validate), 现在我该如何提供 RelNode? SqlNode 是否可以又是如何转换为 RelNode? 
 * Q2: 如何创建一个 Planner? Planner 是如何 findBestExp() 的? 
 
-##### 语义分析
+## 6.1 语义分析
 `这里专门解释上面的 Q1`
 
 那么是如何完成转换的过程? 通过[搜索](https://www.google.com/search?q=sqlnode+relnode+calcite) 我们可以找到这样的文档: 
@@ -125,6 +127,8 @@ Converts a SQL parse tree (consisting of SqlNode objects) into a relational alge
 * SqlNode: A SqlNode is a SQL parse tree.
 * RelNode: A RelNode is a relational expression.
 * RexNode: Row expression.
+
+注: 这里正好解释了[第二章](../calcite/calcite.md#二.处理流程)留下的坑
 
 SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑计划(Logical Plan)的过程.
 
@@ -141,7 +145,7 @@ SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑�
 5. 上面执行的这些 convertXXX 操作就是在生成 LogicalProject 逻辑计划 ![img.png](img/img12.png)
 6. 最终我们生成的 ![img.png](img/img13.png)
 
-##### 优化器(Planner)的实现
+## 6.2 优化器(Planner)的实现
 
 `这里专门解释上面的 Q2`
 
@@ -156,7 +160,6 @@ SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑�
 
 关系代数常用的对集合的操作:
 
-
 SQL -> 关系代数 -> 优化关系表达式
 
 * 基于规则的优化(Rule-Based Optimizer，RBO)
@@ -165,7 +168,7 @@ SQL -> 关系代数 -> 优化关系表达式
 * 基于成本的优化(Cost-Based Optimizer，CBO)
     * CBO 的实现: VolcanoPlanner
 
-更详细的对于 CBO & RBO: 点击此[文章](http://hbasefly.com/2017/05/04/bigdata%EF%BC%8Dcbo/) 
+更详细的对于 CBO & RBO: 点击此 [**文章**](http://hbasefly.com/2017/05/04/bigdata%EF%BC%8Dcbo/). 
 
 无论 RBO or CBO, 都遵循着同样地优化准则:
 
@@ -176,7 +179,9 @@ SQL -> 关系代数 -> 优化关系表达式
 
 知道了优化根本, 我们具体去看 HepPlanner / VolcanoPlanner
 
-###### HepPlanner
+![img.png](img/img20.png)
+
+## 6.3 HepPlanner
 
 官方的测试类 [HepPlannerTest](https://github.com/apache/calcite/blob/f0c6cd5a52cfd954dd89fe7a2a422fe6e60ed28e/core/src/test/java/org/apache/calcite/test/HepPlannerTest.java)
 
@@ -472,7 +477,7 @@ public static class FilterIntoJoinRule extends FilterJoinRule {
 
 fireRule 方法我们只列举 onMatch() 的一个实现, 以 FilterIntoJoinRule 为例 ![img18](img/img18.png)
 
-###### VolcanoPlanner
+## 6.4 VolcanoPlanner
 
 官方的测试类 [VolcanoPlannerTest](https://github.com/apache/calcite/blob/b9c2099ea92a575084b55a206efc5dd341c0df62/core/src/test/java/org/apache/calcite/plan/volcano/VolcanoPlannerTest.java)
 
