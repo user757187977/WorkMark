@@ -23,7 +23,7 @@
 4. 逻辑计划优化, 优化器的核心, 根据前面生成的逻辑计划按照相应的规则(Rule)进行优化;
 5. 物理执行.
 
-注: 在这里可能大家对于 SqlNode RelNode LogicalPlan 或者 什么是 Rule 可能都不清楚, 没关系, 往下继续看, [第六章](../calcite/calcite.md#六.Optimize)会解释这些的.
+注: 在这里可能大家对于 SqlNode RelNode LogicalPlan 或者 什么是 Rule 可能都不清楚, 没关系, 往下继续看, [第六章](../calcite/calcite.md#61-语义分析)会解释这些的.
 
 # 三.Parser
 
