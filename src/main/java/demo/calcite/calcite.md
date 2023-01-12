@@ -25,11 +25,13 @@
 
 注: 在这里可能大家对于 SqlNode RelNode LogicalPlan 或者 什么是 Rule 可能都不清楚, 没关系, 往下继续看, [第六章](../calcite/calcite.md#61-语义分析)会解释这些的.
 
+Demo 基于 1.18.0 [DOC](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
+
 # 三.Parser
 
 `Calcite 使用 javacc 做 语义 词义 解析.`
 
-## 3.1 java DOC
+## 3.1 javacc
 
 [javacc](https://javacc.github.io/javacc/): `Java Compiler Compiler (JavaCC) is the most popular parser generator for use with Java applications.`
 
@@ -50,8 +52,6 @@ javacc 是一个 语法词法 解析器的生成器, 是个 **生成器**, 生�
 4. 四则运算计算器使用[入口](./javacc/test/JavaccTest.java)
 
 有了四则运算的例子, 可以深入了解 calcite 的 [Parser.jj](https://github.com/apache/calcite/blob/master/core/src/main/codegen/templates/Parser.jj)
-
-Demo 基于 1.18.0 [DOC](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
 
 ## 3.2 calcite 的 parser 过程
 
@@ -471,12 +471,69 @@ public static class FilterIntoJoinRule extends FilterJoinRule {
 }
 
 ```
+
 结合上面的 applyRule 方法 关注下 call.results 的变化, ![img17](img/img17.png) -fireRule(call)-> ![img19](img/img19.png)
 
 fireRule 方法我们只列举 onMatch() 的一个实现, 以 FilterIntoJoinRule 为例 ![img18](img/img18.png)
 
 ## 6.4 VolcanoPlanner
 
-官方的测试类 [VolcanoPlannerTest](https://github.com/apache/calcite/blob/b9c2099ea92a575084b55a206efc5dd341c0df62/core/src/test/java/org/apache/calcite/plan/volcano/VolcanoPlannerTest.java)
+### 6.4.1 关于 CBO
 
-既然是基于成本的优化器, 那就要给 calcite 一个计算成本的公式, 这里暂时不做详细介绍了, 大家直接看 [CBOTest](./cbo/CBOTest.java) 代码的解析过程就好了.
+有些时候仅有 RBO 还是不够的, 比如: A join B join C, A B 都是大表, C 是小表, 那明显就是 A join C join B 才是最优执行结果, 这种优化有什么规则么? 并没有, 而是需要计算 A join B join C 的成本 与 B join A join C 或其他的 join 方式的成本, 之后基于成本选择.
+
+那么对于 CBO 我们要考虑的事情:
+1. CBO 的原理是计算所有执行路径的成本, 之后选择最小成本的执行路径. 问题转化: **如何计算路径的成本**?
+2. 想要知道路径的成本, 必然要知道每个算子的成本. 问题转化: **如何计算算子的成本**?
+3. 想要知道算子的成本, 需要知道计算规则与参与计算集. 问题转化: **如何定义计算规则**? **如何计算中间结果**?
+4. 上面说的计算规则其实是一种固定的规则, 可定义; 而中间结果则需要原始表的信息沿着语法树逐层推导. 问题转化: **如何知道原始表的基本信息与推到出中间表信息**?
+
+带着问题, 我们整理出我们每步要做的目标:
+1. 采集原始表基本信息.
+2. 计算中间表基本信息.
+3. 定义每种算子的代价计算规则, 结合中间表基本信息, 可以计算出算子的执行代价.
+4. 遍历路径, 各个节点的算子执行代价之和就是路径执行代价.
+5. 选择最小代价路径.
+
+接下来以一条 sql 为例:
+```sql
+select * from A left join C on a.cid = c.id where c.id > 100;
+```
+
+#### 1.采集原始表基本信息
+* estimatedSize: 每个 LogicalPlan 节点输出数据大小
+* rowCount: 每个 LogicalPlan 节点输出数据总条数
+* basicStats: 基本列信息, 包括列类型、Max、Min、number of nulls, number of distinct values, max column length, average column length等
+* ... ...
+
+* 为什么采集这些?
+    * estimatedSize 与 rowCount 都是用于计算算子执行代价的两个重要信息.
+* 如何采集? 一般有两种方案:
+    * 所有表扫描一遍, 优点就是简单, 缺点就是大表不友好;
+    * Analyze 命令, 也有优化, 比如数据没有大变动的场景就没必要执行, 再比如高峰期不执行等.
+
+#### 2.计算中间表基本信息
+我们有了原始表信息了, 现在如何计算中间表基本信息呢? 比如上面的 c.id > 100 的信息呢?
+
+1. 对于均匀分布的场景, 其实只需要知道 id 的最大值最小值就可以取出 id>100 的比例了.
+   1. ![img.png](./img/img21.png)
+   2. 注: 这里的 id 并不一定是真正的 id, 这个字段的关键是要体现均匀分布, 比如 1 2 3 4 ... 199 200, 这样的 id>100, 我们就知道代价是全表的一半 
+2. 如果数据分布不均匀呢? 我们可以利用直方图
+   1. ![img_1.png](./img/img22.png)
+   2. cost(>100) / cost * id
+
+#### 3.核心算子实际代价计算
+一般来说, 代价基于两个维度来定义: CPU/IO, 但实际并不是仅有这两个,
+* Table Scan算子: 数据条数 * 数据平均大小 * 从 HDFS 读取数据每单位所需要的代价; CPU IO 计算方式都是一样的;
+* Hash Join算子: 哈希 join 包含两个过程: 建立阶段与探测阶段, 所以代价计算相比上面的复杂一些, 需要小表构建 table 的代价 + 大表探测的代价; CPU IO 需要分别计算;
+
+无论哪种算子的代价计算, 都是和参与的条数, 数据大小等因素相关; 这些信息是从第二步计算出来的中间表信息中抽取来的.
+
+#### 4.选择最优执行路径
+基于图的算法, 这里省略
+
+### 6.4.2 VolcanoPlanner 是如何实现的
+
+`上面我们介绍了 CBO 的理论知识, 这里我们具体看 calcite 如何实现的`
+
+官方的测试类 [VolcanoPlannerTest](https://github.com/apache/calcite/blob/b9c2099ea92a575084b55a206efc5dd341c0df62/core/src/test/java/org/apache/calcite/plan/volcano/VolcanoPlannerTest.java)
