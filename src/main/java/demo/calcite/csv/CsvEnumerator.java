@@ -19,7 +19,6 @@ public class CsvEnumerator<E> implements Enumerator<E> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

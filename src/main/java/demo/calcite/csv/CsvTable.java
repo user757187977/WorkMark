@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class CsvTable extends AbstractTable implements ScannableTable {
+
     private Source source;
 
     public CsvTable(Source source) {
@@ -31,9 +32,6 @@ public class CsvTable extends AbstractTable implements ScannableTable {
      */
     @Override
     public RelDataType getRowType(RelDataTypeFactory relDataTypeFactory) {
-        RelDataTypeFactory typeFactory = relDataTypeFactory;
-
-//        JavaTypeFactory typeFactory = (JavaTypeFactory)relDataTypeFactory;
 
         List<String> names = Lists.newLinkedList();
         List<RelDataType> types = Lists.newLinkedList();
@@ -46,16 +44,14 @@ public class CsvTable extends AbstractTable implements ScannableTable {
                 String name = column.split(":")[0];
                 String type = column.split(":")[1];
                 names.add(name);
-                types.add(typeFactory.createSqlType(SqlTypeName.get(type)));
+                types.add(relDataTypeFactory.createSqlType(SqlTypeName.get(type)));
             });
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return typeFactory.createStructType(Pair.zip(names, types));
+        return relDataTypeFactory.createStructType(Pair.zip(names, types));
     }
 
     @Override

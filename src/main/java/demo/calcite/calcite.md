@@ -71,7 +71,7 @@ public class Test {
 }
 ```
 
-以 [CalciteTest](./rbo/RBOTest.java)._parse()_ 为例
+以 [CalciteUtils](./utils/CalciteUtils.java)._parse()_ 为例
 
 解析过程: ![img.png](img/img4.png)
 
@@ -84,7 +84,7 @@ public class Test {
 通过上面的 Parser 过程会生成一个 SqlNode 对象, 接下来对它进行语法检查阶段, 语法检查的前提就是元数据(表名, 字段名, 字段类型, 函数名...)
 
 结合 [calcite java doc - 1.18.0](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html) 
-与我们的调用代码 [validate](./rbo/RBOTest.java)._validate()_ 看一次验证的过程
+与我们的调用代码 [CalciteUtils](./utils/CalciteUtils.java)._validate()_ 看一次验证的过程
 
 通过验证器的构造函数, 发现 SqlNode 验证的就是 SQL 运算符(函数)/catalog/数据类型/SQL 兼容模式
 
@@ -98,7 +98,7 @@ public class Test {
 
 # 六.Optimize
 
-关于优化我们直接查看代码: [**CalciteTest**](./rbo/RBOTest.java)._rBoRelNodeFindBestExp()_.
+关于优化我们直接查看代码: [**RBOTest**](./run/RBOTest.java)._rBoRelNodeFindBestExp()_.
 
 这其中最关键的一行: planner.findBestExp() 是怎么完成优化的呢? 
 
@@ -130,7 +130,7 @@ Converts a SQL parse tree (consisting of SqlNode objects) into a relational alge
 
 SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑计划(Logical Plan)的过程.
 
-结合 [**CalciteTest**](./rbo/RBOTest.java)._sQLNode2RelNode()_ 我们来看 SqlNode -> RelNode 的过程.
+结合 [**CalciteUtils**](./utils/CalciteUtils.java)._sQLNode2RelNode()_ 我们来看 SqlNode -> RelNode 的过程.
 
 1. org.apache.calcite.sql2rel.SqlToRelConverter.convertQuery: Converts an unvalidated query's parse tree into a relational expression.
 2. org.apache.calcite.sql2rel.SqlToRelConverter.convertQueryRecursive: Recursively converts a query to a relational expression.
@@ -183,7 +183,7 @@ SQL -> 关系代数 -> 优化关系表达式
 
 官方的测试类 [HepPlannerTest](https://github.com/apache/calcite/blob/f0c6cd5a52cfd954dd89fe7a2a422fe6e60ed28e/core/src/test/java/org/apache/calcite/test/HepPlannerTest.java)
 
-以 [CalciteTest](./rbo/RBOTest.java)._rBoRelNodeFindBestExp()_ 入口, 追踪源码看下:
+以 [RBOTest](./run/RBOTest.java)._rBoRelNodeFindBestExp()_ 入口, 追踪源码看下:
 * org.apache.calcite.plan.hep.HepPlanner.setRoot: 构建图, 这个图是什么呢? 就是上面的 RelNode 转换成了 图 这种结构.
 * org.apache.calcite.plan.hep.HepPlanner.findBestExp: 优化开始
   * org.apache.calcite.plan.hep.HepPlanner.executeProgram: 遍历 [HepProgram](https://javadoc.io/static/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/plan/hep/HepProgram.html) 中指定的规则
@@ -204,7 +204,7 @@ public class HepPlanner extends AbstractRelOptPlanner {
         currentProgram = program;
         currentProgram.initialize(program == mainProgram);
         // 遍历的就是: 我们创建优化器时指定的规则
-        // 参考创建优化器代码: main.java.demo.calcite.rbo.RBOTest.createHepPlanner
+        // 参考创建优化器代码: main.java.demo.calcite.run.RBOTest.createHepPlanner
         for (HepInstruction instruction : currentProgram.instructions) {
             instruction.execute(this);
             // 这里为了专注重要方法省略了些其他代码, 大家有兴趣自己查看源码
@@ -476,6 +476,8 @@ public static class FilterIntoJoinRule extends FilterJoinRule {
 
 fireRule 方法我们只列举 onMatch() 的一个实现, 以 FilterIntoJoinRule 为例 ![img18](img/img18.png)
 
+基于规则优化之后的对比: ![img.png](img/img23.png)
+
 ## 6.4 VolcanoPlanner
 
 ### 6.4.1 关于 CBO
@@ -537,3 +539,5 @@ select * from A left join C on a.cid = c.id where c.id > 100;
 `上面我们介绍了 CBO 的理论知识, 这里我们具体看 calcite 如何实现的`
 
 官方的测试类 [VolcanoPlannerTest](https://github.com/apache/calcite/blob/b9c2099ea92a575084b55a206efc5dd341c0df62/core/src/test/java/org/apache/calcite/plan/volcano/VolcanoPlannerTest.java)
+
+基于成本优化之后的对比: ![img.png](img/img24.png)

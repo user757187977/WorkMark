@@ -11,8 +11,8 @@ import java.net.URL;
 import java.util.Map;
 
 public class CsvSchema extends AbstractSchema {
-    private Map<String, Table> tableMap;
-    private String dataFiles;
+
+    private final String dataFiles;
 
     public CsvSchema(String dataFile) {
         this.dataFiles = dataFile;
@@ -26,9 +26,6 @@ public class CsvSchema extends AbstractSchema {
             Source source = Sources.of(url);
             builder.put(dataFile.split("\\.")[0], new CsvTable(source));
         }
-        // 一个数据库有多个表名，这里初始化，大小写要注意了
-        tableMap = builder.build();
-
-        return tableMap;
+        return builder.build();
     }
 }
