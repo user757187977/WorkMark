@@ -540,4 +540,6 @@ select * from A left join C on a.cid = c.id where c.id > 100;
 
 官方的测试类 [VolcanoPlannerTest](https://github.com/apache/calcite/blob/b9c2099ea92a575084b55a206efc5dd341c0df62/core/src/test/java/org/apache/calcite/plan/volcano/VolcanoPlannerTest.java)
 
+也可以看我们自己简单的 [CBOTest](./run/CBOTest.java) 入门代码
+
 基于成本优化之后的对比: ![img.png](img/img24.png)
