@@ -11,7 +11,6 @@ import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.validate.SqlValidator;
 
-
 /**
  * @Description RBOTest.
  * @Author lishoupeng
