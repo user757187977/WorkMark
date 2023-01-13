@@ -545,4 +545,4 @@ select * from A left join C on a.cid = c.id where c.id > 100;
 基于成本优化之后的对比: ![img.png](./images/calcite/img24.png)
 
 # 七.工程的落地
-参考: [calcite-demo](https://github.com/user757187977/calcite-demo)
+参考另一个工程: [calcite-demo](https://github.com/user757187977/calcite-demo)
