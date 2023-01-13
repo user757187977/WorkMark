@@ -543,3 +543,6 @@ select * from A left join C on a.cid = c.id where c.id > 100;
 也可以看我们自己简单的 [CBOTest](../main/java/demo/calcite/run/CBOTest.java) 入门代码
 
 基于成本优化之后的对比: ![img.png](./images/calcite/img24.png)
+
+# 七.工程的落地
+参考: [calcite-demo](https://github.com/user757187977/calcite-demo)
