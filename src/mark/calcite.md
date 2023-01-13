@@ -540,9 +540,6 @@ select * from A left join C on a.cid = c.id where c.id > 100;
 
 官方的测试类 [VolcanoPlannerTest](https://github.com/apache/calcite/blob/b9c2099ea92a575084b55a206efc5dd341c0df62/core/src/test/java/org/apache/calcite/plan/volcano/VolcanoPlannerTest.java)
 
-也可以看我们自己简单的 [CBOTest](../main/java/demo/calcite/run/CBOTest.java) 入门代码
+也可以参考另一个工程: [calcite-demo](https://github.com/user757187977/calcite-demo/tree/main/src/main/java/com/lishoupeng/calcite/medium), 这里有详细的计算 成本 优化 中间数据集基本信息 的过程
 
 基于成本优化之后的对比: ![img.png](./images/calcite/img24.png)
-
-# 七.工程的落地
-参考另一个工程: [calcite-demo](https://github.com/user757187977/calcite-demo)
