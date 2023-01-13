@@ -48,6 +48,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -105,6 +106,7 @@ public class CalciteUtils {
 
     public static class ViewExpanderImpl implements RelOptTable.ViewExpander {
         public ViewExpanderImpl() {
+            // TODO document why this constructor is empty
         }
 
         @Override
@@ -128,13 +130,22 @@ public class CalciteUtils {
         return connection;
     }
 
-    public static List<Map<String, Object>> getData(ResultSet resultSet) throws Exception {
+    public static List<Map<String, Object>> getData(ResultSet resultSet) {
         List<Map<String, Object>> list = Lists.newArrayList();
-        ResultSetMetaData metaData = resultSet.getMetaData();
-        int columnSize = metaData.getColumnCount();
-
-        while (resultSet.next()) {
-
+        ResultSetMetaData metaData = null;
+        int columnSize = 0;
+        try {
+            metaData = resultSet.getMetaData();
+            columnSize = metaData.getColumnCount();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        while (true) {
+            try {
+                if (!resultSet.next()) break;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             Map<String, Object> map = Maps.newLinkedHashMap();
             for (int i = 1; i < columnSize + 1; i++) {
                 try{

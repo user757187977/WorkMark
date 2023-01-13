@@ -8,14 +8,14 @@
 
 # 一.calcite 的意义
 `calcite 对我有什么意义? 流行在哪? `
-![img.png](img/img8.png)
+![img.png](./images/calcite/img8.png)
 
 在一般的数据库管理系统中, 涉及这 5 个模块, calcite 专注于绿色的 3 个模块.
 
 # 二.处理流程
 `calcite 如何贯穿了整个查询过程?`
 
-![img.png](img/img.png)
+![img.png](./images/calcite/img.png)
 
 1. 解析 SQL, 把 SQL 转换成为 AST(抽象语法树), 在 Calcite 中用 SqlNode 来表示;
 2. 语法检查, 根据数据库的元数据信息进行语法验证, 验证之后还是用 SqlNode 表示 AST 语法树;
@@ -23,7 +23,7 @@
 4. 逻辑计划优化, 优化器的核心, 根据前面生成的逻辑计划按照相应的规则(Rule)进行优化;
 5. 物理执行.
 
-注: 在这里可能大家对于 SqlNode RelNode LogicalPlan 或者 什么是 Rule 可能都不清楚, 没关系, 往下继续看, [第六章](../calcite/calcite.md#61-语义分析)会解释这些的.
+注: 在这里可能大家对于 SqlNode RelNode LogicalPlan 或者 什么是 Rule 可能都不清楚, 没关系, 往下继续看, [第六章](calcite.md#61-语义分析)会解释这些的.
 
 Demo 基于 1.18.0 [DOC](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
 
@@ -44,12 +44,12 @@ javacc 是一个 语法词法 解析器的生成器, 是个 **生成器**, 生�
 
 以一个四则运算表达式为例, 了解 javacc 如何参与到解析过程
 
-![img.png](img/img3.png)
-1. 看看四则运算表达式的 [Calculator.jj](./javacc/Calculator.jj) 文件;
+![img.png](./images/calcite/img3.png)
+1. 看看四则运算表达式的 [Calculator.jj](../main/java/demo/calcite/javacc/Calculator.jj) 文件;
    1. jj 文件的编写过程是思路的实现, 画清楚 **语法树** 是帮助理清思路的重要方法.
 2. ```javacc xx.jj```
-3. 生成工具类 ![img.png](img/img6.png)
-4. 四则运算计算器使用[入口](./javacc/test/JavaccTest.java)
+3. 生成工具类 ![img.png](./images/calcite/img6.png)
+4. 四则运算计算器使用[入口](../main/java/demo/calcite/javacc/test/JavaccTest.java)
 
 有了四则运算的例子, 可以深入了解 calcite 的 [Parser.jj](https://github.com/apache/calcite/blob/master/core/src/main/codegen/templates/Parser.jj)
 
@@ -71,34 +71,34 @@ public class Test {
 }
 ```
 
-以 [CalciteUtils](./utils/CalciteUtils.java)._parse()_ 为例
+以 [CalciteUtils](../main/java/demo/calcite/utils/CalciteUtils.java)._parse()_ 为例
 
-解析过程: ![img.png](img/img4.png)
+解析过程: ![img.png](./images/calcite/img4.png)
 
-解析结果: ![img.png](img/img5.png)
+解析结果: ![img.png](./images/calcite/img5.png)
 
-结合 [Visitor](./visitor/Visitor.java)([访问者](../../../../mark/设计模式.md)设计模式) 可以获取到这样的结果: ![img.png](img/img7.png)
+结合 [Visitor](../main/java/demo/calcite/visitor/Visitor.java)([访问者](设计模式.md)设计模式) 可以获取到这样的结果: ![img.png](./images/calcite/img7.png)
 
 # 四.Validate
 
 通过上面的 Parser 过程会生成一个 SqlNode 对象, 接下来对它进行语法检查阶段, 语法检查的前提就是元数据(表名, 字段名, 字段类型, 函数名...)
 
 结合 [calcite java doc - 1.18.0](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html) 
-与我们的调用代码 [CalciteUtils](./utils/CalciteUtils.java)._validate()_ 看一次验证的过程
+与我们的调用代码 [CalciteUtils](../main/java/demo/calcite/utils/CalciteUtils.java)._validate()_ 看一次验证的过程
 
 通过验证器的构造函数, 发现 SqlNode 验证的就是 SQL 运算符(函数)/catalog/数据类型/SQL 兼容模式
 
-验证过程: ![img.png](img/img9.png)
+验证过程: ![img.png](./images/calcite/img9.png)
 
-验证结果: 特意写错字段名字测试一下 ![img.png](img/img10.png)
+验证结果: 特意写错字段名字测试一下 ![img.png](./images/calcite/img10.png)
 
 # 五.Parser & Validate 总结:
 
-![img.png](img/img11.png)
+![img.png](./images/calcite/img11.png)
 
 # 六.Optimize
 
-关于优化我们直接查看代码: [**RBOTest**](./run/RBOTest.java)._rBoRelNodeFindBestExp()_.
+关于优化我们直接查看代码: [**RBOTest**](../main/java/demo/calcite/run/RBOTest.java)._rBoRelNodeFindBestExp()_.
 
 这其中最关键的一行: planner.findBestExp() 是怎么完成优化的呢? 
 
@@ -126,11 +126,11 @@ Converts a SQL parse tree (consisting of SqlNode objects) into a relational alge
 * RelNode: A RelNode is a relational expression.
 * RexNode: Row expression.
 
-注: 这里正好解释了[第二章](../calcite/calcite.md#二处理流程)留下的坑
+注: 这里正好解释了[第二章](calcite.md#二处理流程)留下的坑
 
 SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑计划(Logical Plan)的过程.
 
-结合 [**CalciteUtils**](./utils/CalciteUtils.java)._sQLNode2RelNode()_ 我们来看 SqlNode -> RelNode 的过程.
+结合 [**CalciteUtils**](../main/java/demo/calcite/utils/CalciteUtils.java)._sQLNode2RelNode()_ 我们来看 SqlNode -> RelNode 的过程.
 
 1. org.apache.calcite.sql2rel.SqlToRelConverter.convertQuery: Converts an unvalidated query's parse tree into a relational expression.
 2. org.apache.calcite.sql2rel.SqlToRelConverter.convertQueryRecursive: Recursively converts a query to a relational expression.
@@ -140,8 +140,8 @@ SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑�
    2. convertWhere
    3. convertSelectList
    4. ... ...
-5. 上面执行的这些 convertXXX 操作就是在生成 LogicalProject 逻辑计划 ![img.png](img/img12.png)
-6. 最终我们生成的 ![img.png](img/img13.png)
+5. 上面执行的这些 convertXXX 操作就是在生成 LogicalProject 逻辑计划 ![img.png](./images/calcite/img12.png)
+6. 最终我们生成的 ![img.png](./images/calcite/img13.png)
 
 ## 6.2 优化器(Planner)的实现
 
@@ -149,7 +149,7 @@ SqlNode -> RelNode/RexNode, 这步我们称为语义分析, 也是生成逻辑�
 
 所谓的优化, 其根本是: 关系代数
 
-![img.png](img/img2.png)
+![img.png](./images/calcite/img2.png)
 
 `
 关系代数是关系型数据库操作的理论基础, 同样也是 calcite 优化模块的核心, 我们常说的 SQL 也仅仅是关系代数运算的一种常用的实现方式而已(并不是唯一方式);
@@ -170,20 +170,20 @@ SQL -> 关系代数 -> 优化关系表达式
 
 无论 RBO or CBO, 都遵循着同样地优化准则:
 
-1. 谓词下推 Predicate Pushdown: 提前 filter 减少数据量 ![img.png](img/img14.png)
-2. 常量折叠 Constant Folding: ![img.png](img/img15.png)
-3. 列裁剪 Column Pruning: 只保留需要列减少计算带来的消耗 ![img.png](img/img16.png)
+1. 谓词下推 Predicate Pushdown: 提前 filter 减少数据量 ![img.png](./images/calcite/img14.png)
+2. 常量折叠 Constant Folding: ![img.png](./images/calcite/img15.png)
+3. 列裁剪 Column Pruning: 只保留需要列减少计算带来的消耗 ![img.png](./images/calcite/img16.png)
 4. 其他
 
 知道了优化根本, 我们具体去看 calcite 中两个优化器: HepPlanner / VolcanoPlanner 的具体实现
 
-结构与继承关系: ![img.png](img/img20.png)
+结构与继承关系: ![img.png](./images/calcite/img20.png)
 
 ## 6.3 HepPlanner
 
 官方的测试类 [HepPlannerTest](https://github.com/apache/calcite/blob/f0c6cd5a52cfd954dd89fe7a2a422fe6e60ed28e/core/src/test/java/org/apache/calcite/test/HepPlannerTest.java)
 
-以 [RBOTest](./run/RBOTest.java)._rBoRelNodeFindBestExp()_ 入口, 追踪源码看下:
+以 [RBOTest](../main/java/demo/calcite/run/RBOTest.java)._rBoRelNodeFindBestExp()_ 入口, 追踪源码看下:
 * org.apache.calcite.plan.hep.HepPlanner.setRoot: 构建图, 这个图是什么呢? 就是上面的 RelNode 转换成了 图 这种结构.
 * org.apache.calcite.plan.hep.HepPlanner.findBestExp: 优化开始
   * org.apache.calcite.plan.hep.HepPlanner.executeProgram: 遍历 [HepProgram](https://javadoc.io/static/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/plan/hep/HepProgram.html) 中指定的规则
@@ -472,11 +472,11 @@ public static class FilterIntoJoinRule extends FilterJoinRule {
 
 ```
 
-结合上面的 applyRule 方法 关注下 call.results 的变化, ![img17](img/img17.png) -fireRule(call)-> ![img19](img/img19.png)
+结合上面的 applyRule 方法 关注下 call.results 的变化, ![img17](./images/calcite/img17.png) -fireRule(call)-> ![img19](./images/calcite/img19.png)
 
-fireRule 方法我们只列举 onMatch() 的一个实现, 以 FilterIntoJoinRule 为例 ![img18](img/img18.png)
+fireRule 方法我们只列举 onMatch() 的一个实现, 以 FilterIntoJoinRule 为例 ![img18](./images/calcite/img18.png)
 
-基于规则优化之后的对比: ![img.png](img/img23.png)
+基于规则优化之后的对比: ![img.png](./images/calcite/img23.png)
 
 ## 6.4 VolcanoPlanner
 
@@ -518,10 +518,10 @@ select * from A left join C on a.cid = c.id where c.id > 100;
 我们有了原始表信息了, 现在如何计算中间表基本信息呢? 比如上面的 c.id > 100 的信息呢?
 
 1. 对于均匀分布的场景, 其实只需要知道 id 的最大值最小值就可以取出 id>100 的比例了.
-   1. ![img.png](./img/img21.png)
+   1. ![img.png](./images/calcite/img21.png)
    2. 注: 这里的 id 并不一定是真正的 id, 这个字段的关键是要体现均匀分布, 比如 1 2 3 4 ... 199 200, 这样的 id>100, 我们就知道代价是全表的一半 
 2. 如果数据分布不均匀呢? 我们可以利用直方图
-   1. ![img_1.png](./img/img22.png)
+   1. ![img_1.png](./images/calcite/img22.png)
    2. cost(>100) / cost * id
 
 #### 3.核心算子实际代价计算
@@ -540,6 +540,6 @@ select * from A left join C on a.cid = c.id where c.id > 100;
 
 官方的测试类 [VolcanoPlannerTest](https://github.com/apache/calcite/blob/b9c2099ea92a575084b55a206efc5dd341c0df62/core/src/test/java/org/apache/calcite/plan/volcano/VolcanoPlannerTest.java)
 
-也可以看我们自己简单的 [CBOTest](./run/CBOTest.java) 入门代码
+也可以看我们自己简单的 [CBOTest](../main/java/demo/calcite/run/CBOTest.java) 入门代码
 
-基于成本优化之后的对比: ![img.png](img/img24.png)
+基于成本优化之后的对比: ![img.png](./images/calcite/img24.png)
