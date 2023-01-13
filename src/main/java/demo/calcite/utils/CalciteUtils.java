@@ -91,13 +91,9 @@ public class CalciteUtils {
             @Override
             public RelDataType getRowType(final RelDataTypeFactory typeFactory) {
                 RelDataTypeFactory.Builder builder = typeFactory.builder();
-
-                builder.add("ID", new BasicSqlType(new RelDataTypeSystemImpl() {
-                }, SqlTypeName.INTEGER));
-                builder.add("NAME", new BasicSqlType(new RelDataTypeSystemImpl() {
-                }, SqlTypeName.CHAR));
-                builder.add("COMPANY", new BasicSqlType(new RelDataTypeSystemImpl() {
-                }, SqlTypeName.CHAR));
+                builder.add("ID", new BasicSqlType(new RelDataTypeSystemImpl() {}, SqlTypeName.INTEGER));
+                builder.add("NAME", new BasicSqlType(new RelDataTypeSystemImpl() {}, SqlTypeName.CHAR));
+                builder.add("COMPANY", new BasicSqlType(new RelDataTypeSystemImpl() {}, SqlTypeName.CHAR));
                 return builder.build();
             }
         });
