@@ -5,7 +5,7 @@
     {
       "name": "DEMO",
       "type": "custom",
-      "factory": "demo.calcite.csv.CsvSchemaFactory",
+      "factory": "demo.calcite.basecsv.schema.CsvSchemaFactory",
       "operand": {
         "dataFile": "JOB.csv,INSTANCE.csv"
       }

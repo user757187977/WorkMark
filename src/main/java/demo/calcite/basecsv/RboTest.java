@@ -39,7 +39,7 @@ public class RboTest {
         System.out.println("----------------- after optimizer ------------------");
         /**
          * 这里修改了 TableScan 到 Filter 的 rowcount 的计算逻辑，
-         * 详见 {@link pers.shezm.calcite.optimizer.cost.CSVRelMdRowCount#getRowCount(Filter rel, RelMetadataQuery mq) }
+         * {@link demo.calcite.basecsv.cost.CSVRelMdRowCount#getRowCount(Filter rel, RelMetadataQuery mq) }
          */
         System.out.println(RelOptUtil.toString(relNode, SqlExplainLevel.ALL_ATTRIBUTES));
     }
