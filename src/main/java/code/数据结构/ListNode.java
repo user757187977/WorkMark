@@ -47,7 +47,7 @@ public class ListNode {
         stringBuilder.append(this.val);
         ListNode listNode = this;
         while (listNode.next != null) {
-            stringBuilder.append(listNode.val);
+            stringBuilder.append(listNode.next.val);
             listNode = listNode.next;
         }
         return stringBuilder.toString();
