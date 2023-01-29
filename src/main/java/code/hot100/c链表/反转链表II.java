@@ -10,22 +10,24 @@ import code.数据结构.ListNode;
 public class 反转链表II {
 
     public static ListNode reverseBetween(ListNode head, int left, int right) {
+        //1. 定义虚拟头
         ListNode dummyNode = new ListNode(-1);
         dummyNode.next = head;
 
+        //2. 定义 4 个指针，待反转部分的：左、右、左前、右后
         ListNode reverseLeftPre = dummyNode;
         for (int i = 0; i < left - 1; i++) reverseLeftPre = reverseLeftPre.next;
-        ListNode reverseLeft = reverseLeftPre.next;
-
         ListNode reverseRight = dummyNode;
         for (int i = 0; i < right; i++) reverseRight = reverseRight.next;
+        ListNode reverseLeft = reverseLeftPre.next;
         ListNode reverseRightNext = reverseRight.next;
 
+        //3. 断开
         reverseLeftPre.next = null;
         reverseRight.next = null;
-
+        //4. 反转
         reverseLinkedList(reverseLeft);
-
+        //5. 拼接回来
         reverseLeftPre.next = reverseRight;
         reverseLeft.next = reverseRightNext;
         return dummyNode.next;
