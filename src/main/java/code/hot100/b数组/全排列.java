@@ -18,6 +18,18 @@ public class 全排列 {
         return asw;
     }
 
+    /*
+    def backtrack(路径, 选择列表):
+        if 满足结束条件:
+            result.add(路径)
+            return
+
+        for 选择 in 选择列表:
+            做选择
+            backtrack(路径, 选择列表)
+            撤销选择
+    */
+
     private static void backtrack(List<List<Integer>> asw, int[] nums, ArrayList<Integer> tmp, int[] visited) {
         if (tmp.size() == nums.length) {
             asw.add(new ArrayList<>(tmp));
