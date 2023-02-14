@@ -14,7 +14,7 @@ public class 全排列 {
     public static List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> asw = new ArrayList<>();
         int[] visited = new int[nums.length];
-        backtrack(asw, nums, new ArrayList<>(), visited);
+        backtrack(asw, new ArrayList<>(), nums, visited);
         return asw;
     }
 
@@ -30,7 +30,7 @@ public class 全排列 {
             撤销选择
     */
 
-    private static void backtrack(List<List<Integer>> asw, int[] nums, ArrayList<Integer> tmp, int[] visited) {
+    private static void backtrack(List<List<Integer>> asw, ArrayList<Integer> tmp, int[] nums, int[] visited) {
         if (tmp.size() == nums.length) {
             asw.add(new ArrayList<>(tmp));
             return;
@@ -39,7 +39,7 @@ public class 全排列 {
             if (visited[i] == 1) continue;
             visited[i] = 1;
             tmp.add(nums[i]);
-            backtrack(asw, nums, tmp, visited);
+            backtrack(asw, tmp, nums, visited);
             visited[i] = 0;
             tmp.remove(tmp.size() - 1);
         }
