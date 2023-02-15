@@ -45,8 +45,7 @@ public class Run {
     public static String addContentAfterWith(String sql, String content) {
         try {
             ParseDriver parseDriver = new ParseDriver();
-            ASTNode astNode = null;
-            astNode = parseDriver.parse(sql);
+            ASTNode astNode = parseDriver.parse(sql);
             ParseDriver.ANTLRNoCaseStringStream antlrNoCaseStringStream = parseDriver.new ANTLRNoCaseStringStream(sql);
             ParseDriver.HiveLexerX lexer = parseDriver.new HiveLexerX(antlrNoCaseStringStream);
             TokenRewriteStream tokenRewriteStream = new TokenRewriteStream(lexer);
