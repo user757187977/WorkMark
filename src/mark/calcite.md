@@ -4,7 +4,7 @@
 2. 联邦查询进阶 [demo](https://github.com/user757187977/calcite-demo) （包含代价计算、catalog、优化规则指定）
 3. 两个 demo 都参考 [doc V1.18.0](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
 
-# [calcite](https://calcite.apache.org/)
+# 前言：[calcite](https://calcite.apache.org/)
 
 `The foundation for your next high-performance database.`
 
