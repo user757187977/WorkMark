@@ -15,7 +15,7 @@
 # 一.calcite 的意义
 
 `calcite 对我有什么意义? 流行在哪? `
-![img.png](./images/calcite/img8.png)
+![img.png](./images/calcite/img26.png)
 
 在一般的数据库管理系统中, 涉及这 5 个模块, calcite 专注于绿色的 3 个模块.
 
@@ -23,7 +23,7 @@
 
 `calcite 如何贯穿了整个查询过程?`
 
-![img.png](./images/calcite/img.png)
+![img.png](./images/calcite/img25.png)
 
 1. 解析 SQL, 把 SQL 转换成为 AST(抽象语法树), 在 Calcite 中用 SqlNode 来表示;
 2. 语法检查, 根据数据库的元数据信息进行语法验证, 验证之后还是用 SqlNode 表示 AST 语法树;
