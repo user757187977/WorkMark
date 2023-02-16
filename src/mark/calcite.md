@@ -179,8 +179,22 @@ SQL -> 关系代数 -> 优化关系表达式
 
 更详细的对于 CBO & RBO: 点击此 [**文章**](http://hbasefly.com/2017/05/04/bigdata%EF%BC%8Dcbo/).
 
-在真正详细解释 RBO CBO 之前，先看看这两种规则都遵循着的一些固定地优化准则：
-
+在真正详细解释 RBO CBO 之前，先看看这两种规则都遵循着的一些固定地优化准则，以这样的 sql 为例：
+```oracle-sql
+select
+  u.id as user_id,
+  u.name as user_name,
+  j.company as user_company,
+  u.age as user_age
+from
+  users u
+  join jobs j on u.id = j.id
+where
+  u.age > 30
+  and j.id > 10
+order by
+  user_id
+```
 1. 谓词下推 Predicate Pushdown: 提前 filter 减少数据量 ![img.png](./images/calcite/img14.png)
 2. 常量折叠 Constant Folding: ![img.png](./images/calcite/img15.png)
 3. 列裁剪 Column Pruning: 只保留需要列减少计算带来的消耗 ![img.png](./images/calcite/img16.png)
