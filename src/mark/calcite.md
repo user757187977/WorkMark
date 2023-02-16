@@ -1,6 +1,6 @@
 # 序言
 
-1. 本工程包含 [demo](./../main/java/demo/calcite/run)
+1. 本工程下包含简单 [demo](./../main/java/demo/calcite/run)
 2. 联邦查询进阶 [demo](https://github.com/user757187977/calcite-demo) （包含代价计算、catalog、优化规则指定）
 3. 两个 demo 都参考 [doc V1.18.0](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
 
@@ -43,26 +43,21 @@
 
 javacc 是一个 语法词法 解析器的生成器, 是个 **生成器**, 生成完整的一套解析工具, 解析过程的本质也是利用 正则.
 
-* 语法解析: parsing
-* 词法解析:
-    * 将每一个字符串解析成一个个标识符(Token)
-    * 例: c 语言解析成 token
+* 语法解析：parsing
+* 词法解析：将每一个字符串解析成一个个标识符(Token)
 
-以一个四则运算表达式为例, 了解 javacc 如何参与到解析过程
-
-![img.png](./images/calcite/img3.png)
-
-1. 看看四则运算表达式的 [Calculator.jj](../main/java/demo/calcite/javacc/Calculator.jj) 文件;
-    1. jj 文件的编写过程是思路的实现, 画清楚 **语法树** 是帮助理清思路的重要方法.
+这里写了一个计算器解析的[例子](../main/java/demo/calcite/javacc/test/JavaccTest.java)，可以运行尝试下。那么总体来说，要利用 javacc 来实现一个计算器解析工具的过程可以整理为这样：
+1. 准备四则运算表达式的 [Calculator.jj](../main/java/demo/calcite/javacc/Calculator.jj) 文件;
+   1. jj 文件的编写过程是思路的实现, 画清楚 **语法树** 是帮助理清思路的重要方法.
 2. ```javacc xx.jj```
-3. 生成工具类 ![img.png](./images/calcite/img6.png)
-4. 四则运算计算器使用[入口](../main/java/demo/calcite/javacc/test/JavaccTest.java)
+3. 得到的工具类 ![img.png](./images/calcite/img6.png)
+4. ![img.png](./images/calcite/img3.png)
 
-有了四则运算的例子, 可以深入了解 calcite
-的 [Parser.jj](https://github.com/apache/calcite/blob/master/core/src/main/codegen/templates/Parser.jj)
+有了四则运算的例子, 可以深入了解 calcite 的 [Parser.jj](https://github.com/apache/calcite/blob/master/core/src/main/codegen/templates/Parser.jj)
 
 ## 3.2 calcite 的 parser 过程
 
+示例代码：
 ```java
 public class Test {
     public static SqlNode parse(String sql) {
@@ -78,14 +73,13 @@ public class Test {
     }
 }
 ```
-
-以 [CalciteUtils](../main/java/demo/calcite/utils/CalciteUtils.java)._parse()_ 为例
+具体查看 [CalciteUtils](../main/java/demo/calcite/utils/CalciteUtils.java)._parse()_ 
 
 解析过程: ![img.png](./images/calcite/img4.png)
 
 解析结果: ![img.png](./images/calcite/img5.png)
 
-结合 [Visitor](../main/java/demo/calcite/visitor/Visitor.java)([访问者](设计模式.md)设计模式)
+结合 [Visitor](../main/java/demo/calcite/visitor/Visitor.java)（[访问者](设计模式.md)设计模式）
 可以获取到这样的结果: ![img.png](./images/calcite/img7.png)
 
 # 四.Validate
@@ -111,6 +105,7 @@ public class Test {
 
 这其中最关键的一行: planner.findBestExp() 是怎么完成优化的呢?
 
+首先，findBestExp 是做什么的？
 `Finds the most efficient expression to implement the query given via RelOptPlanner.setRoot(org.apache.calcite.rel.RelNode).`
 
 也就是优化器我们指定 root 一个 RelNode 便可以寻找最高效解析器了.
@@ -118,8 +113,7 @@ public class Test {
 这一部分中我们需要两个对象,
 
 1. [**RelNode**](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/rel/RelNode.html)
-2. [**
-   Planner**](https://javadoc.io/static/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/plan/RelOptPlanner.html)
+2. [**Planner**](https://javadoc.io/static/org.apache.calcite/calcite-core/1.18.0/org/apache/calcite/plan/RelOptPlanner.html)
 
 对应的问题:
 
@@ -180,12 +174,12 @@ SQL -> 关系代数 -> 优化关系表达式
 * 基于规则的优化(Rule-Based Optimizer，RBO)
     * 根据优化规则对关系表达式进行转换, 这里的转换是说一个关系表达式经过优化规则后会变成另外一个关系表达式, 同时原有表达式会被裁剪掉, 经过一系列转换后生成最终的执行计划.
     * RBO 的实现: HepPlanner
-* 基于成本的优化(Cost-Based Optimizer，CBO)
+* 基于代价的优化(Cost-Based Optimizer，CBO)
     * CBO 的实现: VolcanoPlanner
 
 更详细的对于 CBO & RBO: 点击此 [**文章**](http://hbasefly.com/2017/05/04/bigdata%EF%BC%8Dcbo/).
 
-无论 RBO or CBO, 都遵循着同样地优化准则:
+无论 RBO or CBO, 都遵循着一些固定地优化准则:
 
 1. 谓词下推 Predicate Pushdown: 提前 filter 减少数据量 ![img.png](./images/calcite/img14.png)
 2. 常量折叠 Constant Folding: ![img.png](./images/calcite/img15.png)
@@ -555,12 +549,12 @@ select * from A left join C on a.cid = c.id where c.id > 100;
 
 #### 3.核心算子实际代价计算
 
-一般来说, 代价基于两个维度来定义: CPU/IO, 但实际并不是仅有这两个,
+一般来说，代价基于两个维度来定义：CPU/IO。
 
-* Table Scan算子: 数据条数 * 数据平均大小 * 从 HDFS 读取数据每单位所需要的代价; CPU IO 计算方式都是一样的;
-* Hash Join算子: 哈希 join 包含两个过程: 建立阶段与探测阶段, 所以代价计算相比上面的复杂一些, 需要小表构建 table 的代价 + 大表探测的代价; CPU IO 需要分别计算;
+* Table Scan算子，数据条数 * 数据平均大小 * 从 HDFS 读取数据每单位所需要的代价，CPU IO 计算方式都是一样的。
+* Hash Join算子，哈希 join 包含两个过程：建立阶段与探测阶段，所以代价计算相比上面的复杂一些，需要小表构建 table 的代价 + 大表探测的代价；CPU IO 需要分别计算；
 
-无论哪种算子的代价计算, 都是和参与的条数, 数据大小等因素相关; 这些信息是从第二步计算出来的中间表信息中抽取来的.
+无论哪种算子的代价计算，都是和参与的条数，数据大小等因素相关；这些信息是从第二步计算出来的中间表信息中抽取来的。
 
 #### 4.选择最优执行路径
 
