@@ -6,6 +6,7 @@
 * ### [Curator](src/mark/curator.md) Guava is to Java what Curator is to Zookeeper.
 ## [笔记](./src/mark)
 ## [日常](./日常)
+* ### [读书笔记](./日常/读书笔记/README.md)
 * ### [摄影](./日常/摄影/photography.md) 
 
 [//]: # (* ### [关于生活的思考]&#40;./日常/关于生活的思考.md&#41;)
