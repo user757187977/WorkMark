@@ -1,6 +1,6 @@
-#[Apache Doris](https://doris.apache.org/zh-CN/)
+# [Apache Doris](https://doris.apache.org/zh-CN/)
 `简单易用、高性能和统一的分析数据库`
-##[学习路径](https://doris.apache.org/zh-CN/learning)
+## [学习路径](https://doris.apache.org/zh-CN/learning)
 * 快速开始
   * [Apache Doris 总体介绍](doris.md#apache-doris-总体介绍)
 * 数据表设计
