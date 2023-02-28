@@ -1,6 +1,6 @@
 # 序言
 
-1. 本工程下包含简单 [demo](./../main/java/demo/calcite/run)
+1. 本工程下包含简单 [demo](./../../main/java/demo/calcite/run)
 2. 联邦查询进阶 [demo](https://github.com/user757187977/calcite-demo) （包含代价计算、catalog、优化规则指定）
 3. 两个 demo 都参考 [doc V1.18.0](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
 
@@ -15,7 +15,7 @@
 # 一.calcite 的意义
 
 `calcite 对我有什么意义? 流行在哪? `
-![img.png](./images/calcite/img26.png)
+![img.png](./images/img26.png)
 
 在一般的数据库管理系统中，涉及这 5 个模块，calcite 专注于绿色的 3 个模块.
 
@@ -23,7 +23,7 @@
 
 `calcite 如何贯穿了整个查询过程?`
 
-![img.png](./images/calcite/img25.png)
+![img.png](./images/img25.png)
 
 1. 解析 SQL，把 SQL 转换成为 AST(抽象语法树)，在 Calcite 中用 SqlNode 来表示;
 2. 语法检查，根据数据库的元数据信息进行语法验证，验证之后还是用 SqlNode 表示 AST 语法树;
@@ -46,12 +46,12 @@ javacc 是一个 语法词法 解析器的生成器，是个 **生成器**，生
 * 语法解析：parsing
 * 词法解析：将每一个字符串解析成一个个标识符(Token)
 
-这里写了一个计算器解析的[例子](../main/java/demo/calcite/javacc/test/JavaccTest.java)，可以运行尝试下。 总的来说，要利用 javacc 来实现一个计算器解析工具的过程可以整理为这样：
-1. 准备四则运算表达式的 [Calculator.jj](../main/java/demo/calcite/javacc/Calculator.jj) 文件;
+这里写了一个计算器解析的[例子](../../main/java/demo/calcite/javacc/test/JavaccTest.java)，可以运行尝试下。 总的来说，要利用 javacc 来实现一个计算器解析工具的过程可以整理为这样：
+1. 准备四则运算表达式的 [Calculator.jj](../../main/java/demo/calcite/javacc/Calculator.jj) 文件;
    1. jj 文件的编写过程是思路的实现，画清楚 **语法树** 是帮助理清思路的重要方法.
 2. ```javacc xx.jj```
-3. 得到的工具类 ![img.png](./images/calcite/img6.png)
-4. ![img.png](./images/calcite/img3.png)
+3. 得到的工具类 ![img.png](./images/img6.png)
+4. ![img.png](./images/img3.png)
 
 有了四则运算的例子，可以深入了解 calcite 的 [Parser.jj](https://github.com/apache/calcite/blob/master/core/src/main/codegen/templates/Parser.jj)
 
@@ -73,35 +73,35 @@ public class Test {
     }
 }
 ```
-具体查看 [CalciteUtils](../main/java/demo/calcite/utils/CalciteUtils.java)._parse()_ 
+具体查看 [CalciteUtils](../../main/java/demo/calcite/utils/CalciteUtils.java)._parse()_ 
 
-解析过程: ![img.png](./images/calcite/img4.png)
+解析过程: ![img.png](./images/img4.png)
 
-解析结果: ![img.png](./images/calcite/img5.png)
+解析结果: ![img.png](./images/img5.png)
 
-结合 [Visitor](../main/java/demo/calcite/visitor/Visitor.java)（[访问者](设计模式.md)设计模式）
-可以获取到这样的结果: ![img.png](./images/calcite/img7.png)
+结合 [Visitor](../../main/java/demo/calcite/visitor/Visitor.java)（[访问者](设计模式.md)设计模式）
+可以获取到这样的结果: ![img.png](./images/img7.png)
 
 # 四.Validate
 
 通过上面的 Parser 过程会生成一个 SqlNode 对象，接下来对它进行语法检查阶段，语法检查的前提就是元数据(表名，字段名，字段类型，函数名...)
 
 结合 [calcite java doc - 1.18.0](https://javadoc.io/doc/org.apache.calcite/calcite-core/1.18.0/overview-summary.html)
-与我们的调用代码 [CalciteUtils](../main/java/demo/calcite/utils/CalciteUtils.java)._validate()_ 看一次验证的过程
+与我们的调用代码 [CalciteUtils](../../main/java/demo/calcite/utils/CalciteUtils.java)._validate()_ 看一次验证的过程
 
 通过验证器的构造函数，发现 SqlNode 验证的就是 SQL 运算符(函数)/catalog/数据类型/SQL 兼容模式
 
-验证过程: ![img.png](./images/calcite/img9.png)
+验证过程: ![img.png](./images/img9.png)
 
-验证结果: 特意写错字段名字测试一下 ![img.png](./images/calcite/img10.png)
+验证结果: 特意写错字段名字测试一下 ![img.png](./images/img10.png)
 
 # 五.Parser & Validate 总结:
 
-![img.png](./images/calcite/img11.png)
+![img.png](./images/img11.png)
 
 # 六.Optimize
 
-关于优化我们直接查看代码: [**RBOTest**](../main/java/demo/calcite/run/RBOTest.java)._rBoRelNodeFindBestExp()_.
+关于优化我们直接查看代码: [**RBOTest**](../../main/java/demo/calcite/run/RBOTest.java)._rBoRelNodeFindBestExp()_.
 
 这其中最关键的一行: planner.findBestExp() 是怎么完成优化的呢?
 
@@ -138,7 +138,7 @@ objects).
 
 SqlNode -> RelNode/RexNode，这步我们称为语义分析，也是生成逻辑计划(Logical Plan)的过程.
 
-结合 [**CalciteUtils**](../main/java/demo/calcite/utils/CalciteUtils.java)._sQLNode2RelNode()_ 我们来看 SqlNode -> RelNode
+结合 [**CalciteUtils**](../../main/java/demo/calcite/utils/CalciteUtils.java)._sQLNode2RelNode()_ 我们来看 SqlNode -> RelNode
 的过程.
 
 1. org.apache.calcite.sql2rel.SqlToRelConverter.convertQuery: Converts an unvalidated query's parse tree into a
@@ -152,8 +152,8 @@ SqlNode -> RelNode/RexNode，这步我们称为语义分析，也是生成逻辑
     2. convertWhere
     3. convertSelectList
     4. ... ...
-5. 上面执行的这些 convertXXX 操作就是在生成 LogicalProject 逻辑计划 ![img.png](./images/calcite/img12.png)
-6. 最终我们生成的 ![img.png](./images/calcite/img13.png)
+5. 上面执行的这些 convertXXX 操作就是在生成 LogicalProject 逻辑计划 ![img.png](./images/img12.png)
+6. 最终我们生成的 ![img.png](./images/img13.png)
 
 ## 6.2 优化器(Planner)的实现
 
@@ -161,7 +161,7 @@ SqlNode -> RelNode/RexNode，这步我们称为语义分析，也是生成逻辑
 
 所谓的优化，其根本是: 关系代数
 
-![img.png](./images/calcite/img2.png)
+![img.png](./images/img2.png)
 
 `
 关系代数是关系型数据库操作的理论基础，同样也是 calcite 优化模块的核心，我们常说的 SQL 也仅仅是关系代数运算的一种常用的实现方式而已(并不是唯一方式); 在 calcite 中会将 SQL 转换成关系表达式，然后通过规则匹配对关系表达式进行优化. 也是一个分层思想的体现.
@@ -195,20 +195,20 @@ where
 order by
   user_id
 ```
-1. 谓词下推 Predicate Pushdown: 提前 filter 减少数据量 ![img.png](./images/calcite/img14.png)
-2. 常量折叠 Constant Folding: ![img.png](./images/calcite/img15.png)
-3. 列裁剪 Column Pruning: 只保留需要列减少计算带来的消耗 ![img.png](./images/calcite/img16.png)
+1. 谓词下推 Predicate Pushdown: 提前 filter 减少数据量 ![img.png](./images/img14.png)
+2. 常量折叠 Constant Folding: ![img.png](./images/img15.png)
+3. 列裁剪 Column Pruning: 只保留需要列减少计算带来的消耗 ![img.png](./images/img16.png)
 4. 其他
 
 知道了优化根本，我们具体去看 calcite 中两个优化器: HepPlanner / VolcanoPlanner 的具体实现
 
-结构与继承关系: ![img.png](./images/calcite/img20.png)
+结构与继承关系: ![img.png](./images/img20.png)
 
 ## 6.3 HepPlanner
 
 官方的测试类 [HepPlannerTest](https://github.com/apache/calcite/blob/f0c6cd5a52cfd954dd89fe7a2a422fe6e60ed28e/core/src/test/java/org/apache/calcite/test/HepPlannerTest.java)
 
-以 [RBOTest](../main/java/demo/calcite/run/RBOTest.java)._rBoRelNodeFindBestExp()_ 入口，追踪源码看下:
+以 [RBOTest](../../main/java/demo/calcite/run/RBOTest.java)._rBoRelNodeFindBestExp()_ 入口，追踪源码看下:
 
 * org.apache.calcite.plan.hep.HepPlanner.setRoot: 构建图，这个图是什么呢? 就是上面的 RelNode 转换成了 图 这种结构.
 * org.apache.calcite.plan.hep.HepPlanner.findBestExp: 优化开始
@@ -262,13 +262,13 @@ public class HepPlanner extends AbstractRelOptPlanner {
      * @param rules 规则
      * @param forceConversions true
      */
-    private void applyRules(Collection<RelOptRule> rules，boolean forceConversions) {
+    private void applyRules(Collection<RelOptRule> rules, boolean forceConversions) {
         if (currentProgram.group != null) {
             assert currentProgram.group.collecting;
             currentProgram.group.ruleSet.addAll(rules);
             return;
         }
-        LOGGER.trace("Applying rule set {}"，rules);
+        LOGGER.trace("Applying rule set {}", rules);
         boolean fullRestartAfterTransformation = currentProgram.matchOrder != HepMatchOrder.ARBITRARY && currentProgram.matchOrder != HepMatchOrder.DEPTH_FIRST;
         int nMatches = 0;
         boolean fixedPoint;
@@ -292,7 +292,7 @@ public class HepPlanner extends AbstractRelOptPlanner {
                         // To the extent possible，pick up where we left off; have to create a new iterator because old one was invalidated by transformation.
                         iter = getGraphIterator(newVertex);
                         if (currentProgram.matchOrder == HepMatchOrder.DEPTH_FIRST) {
-                            nMatches = depthFirstApply(iter，rules，forceConversions，nMatches);
+                            nMatches = depthFirstApply(iter, rules, forceConversions, nMatches);
                             if (nMatches >= currentProgram.matchLimit) return;
                         }
                         // Remember to go around again since we're skipping some stuff.
@@ -311,7 +311,7 @@ public class HepPlanner extends AbstractRelOptPlanner {
      * @param forceConversions true
      * @return 优化过的关系表达式
      */
-    private HepRelVertex applyRule(RelOptRule rule，HepRelVertex vertex，boolean forceConversions) {
+    private HepRelVertex applyRule(RelOptRule rule, HepRelVertex vertex, boolean forceConversions) {
         if (!belongsToDag(vertex)) return null;
         RelTrait parentTrait = null;
         List<RelNode> parents = null;
@@ -319,7 +319,7 @@ public class HepPlanner extends AbstractRelOptPlanner {
             // Guaranteed converter rules require special casing to make sure they only fire where actually needed，otherwise they tend to fire to infinity and beyond.
             ConverterRule converterRule = (ConverterRule) rule;
             if (converterRule.isGuaranteed() || !forceConversions) {
-                if (!doesConverterApply(converterRule，vertex)) return null;
+                if (!doesConverterApply(converterRule, vertex)) return null;
                 parentTrait = converterRule.getOutTrait();
             }
         } else if (rule instanceof CommonRelSubExprRule) {
@@ -332,22 +332,22 @@ public class HepPlanner extends AbstractRelOptPlanner {
             }
         }
         final List<RelNode> bindings = new ArrayList<>();
-        final Map<RelNode，List<RelNode>> nodeChildren = new HashMap<>();
-        boolean match = matchOperands(rule.getOperand()，vertex.getCurrentRel()，bindings，nodeChildren);
+        final Map<RelNode, List<RelNode>> nodeChildren = new HashMap<>();
+        boolean match = matchOperands(rule.getOperand(), vertex.getCurrentRel(), bindings, nodeChildren);
         if (!match) return null;
         // applyTransformationResults 时需要的 call 需要关注下，可以先往下看，一会还会回来.
         // 接下来的 debug 过程，需要关注下 call.results 属性
-        HepRuleCall call = new HepRuleCall(this，rule.getOperand()，bindings.toArray(new RelNode[0])，nodeChildren，parents);
+        HepRuleCall call = new HepRuleCall(this, rule.getOperand(), bindings.toArray(new RelNode[0]), nodeChildren, parents);
         // Allow the rule to apply its own side-conditions.
         if (!rule.matches(call)) return null;
         // 这步骤之后，call.results 属性发生变化，需要关注下这个方法
         fireRule(call);
         // applyTransformationResults 才是真正的 转换过程
-        if (!call.getResults().isEmpty()) return applyTransformationResults(vertex，call，parentTrait);
+        if (!call.getResults().isEmpty()) return applyTransformationResults(vertex, call, parentTrait);
         return null;
     }
 
-    private HepRelVertex applyTransformationResults(HepRelVertex vertex，HepRuleCall call，RelTrait parentTrait) {
+    private HepRelVertex applyTransformationResults(HepRelVertex vertex, HepRuleCall call, RelTrait parentTrait) {
         // TODO jvs 5-Apr-2006:  Take the one that gives the best
         // global cost rather than the best local cost.  That requires
         // "tentative" graph edits.
@@ -366,10 +366,10 @@ public class HepPlanner extends AbstractRelOptPlanner {
             final RelMetadataQuery mq = call.getMetadataQuery();
             // 又出现 call.getResults()
             for (RelNode rel : call.getResults()) {
-                RelOptCost thisCost = getCost(rel，mq);
+                RelOptCost thisCost = getCost(rel, mq);
                 if (LOGGER.isTraceEnabled()) {
                     // Keep in the isTraceEnabled for the getRowCount method call
-                    LOGGER.trace("considering {} with cumulative cost={} and rowcount={}"，rel，thisCost，mq.getRowCount(rel));
+                    LOGGER.trace("considering {} with cumulative cost={} and rowcount={}", rel, thisCost, mq.getRowCount(rel));
                 }
                 if ((bestRel == null) || thisCost.isLt(bestCost)) {
                     bestRel = rel;
@@ -379,12 +379,12 @@ public class HepPlanner extends AbstractRelOptPlanner {
         }
 
         ++nTransformations;
-        notifyTransformation(call，bestRel，true);
+        notifyTransformation(call, bestRel, true);
 
         // Before we add the result，make a copy of the list of vertex's parents.  
         // We'll need this later during contraction so that we only update the existing parents，not the new parents (otherwise loops can result).  
         // Also take care of filtering out parents by traits in case we're dealing with a converter rule.
-        final List<HepRelVertex> allParents = Graphs.predecessorListOf(graph，vertex);
+        final List<HepRelVertex> allParents = Graphs.predecessorListOf(graph, vertex);
         final List<HepRelVertex> parents = new ArrayList<>();
         for (HepRelVertex parent : allParents) {
             if (parentTrait != null) {
@@ -409,11 +409,11 @@ public class HepPlanner extends AbstractRelOptPlanner {
         if (iParentMatch != -1) {
             newVertex = parents.get(iParentMatch);
         } else {
-            contractVertices(newVertex，vertex，parents);
+            contractVertices(newVertex, vertex, parents);
         }
         // Assume listener doesn't want to see garbage.
         if (getListener() != null) collectGarbage();
-        notifyTransformation(call，bestRel，false);
+        notifyTransformation(call, bestRel, false);
         dumpGraph();
         return newVertex;
     }
@@ -427,17 +427,17 @@ public class HepPlanner extends AbstractRelOptPlanner {
 
         assert ruleCall.getRule().matches(ruleCall);
         if (isRuleExcluded(ruleCall.getRule())) {
-            LOGGER.debug("call#{}: Rule [{}] not fired due to exclusion filter"，ruleCall.id，ruleCall.getRule());
+            LOGGER.debug("call#{}: Rule [{}] not fired due to exclusion filter", ruleCall.id, ruleCall.getRule());
             return;
         }
 
         if (LOGGER.isDebugEnabled()) {
             // Leave this wrapped in a conditional to prevent unnecessarily calling Arrays.toString(...)
-            LOGGER.debug("call#{}: Apply rule [{}] to {}"，ruleCall.id，ruleCall.getRule()，Arrays.toString(ruleCall.rels));
+            LOGGER.debug("call#{}: Apply rule [{}] to {}", ruleCall.id, ruleCall.getRule(), Arrays.toString(ruleCall.rels));
         }
 
         if (listener != null) {
-            RelOptListener.RuleAttemptedEvent event = new RelOptListener.RuleAttemptedEvent(this，ruleCall.rel(0)，ruleCall，true);
+            RelOptListener.RuleAttemptedEvent event = new RelOptListener.RuleAttemptedEvent(this, ruleCall.rel(0), ruleCall, true);
             listener.ruleAttempted(event);
         }
 
@@ -445,7 +445,7 @@ public class HepPlanner extends AbstractRelOptPlanner {
         ruleCall.getRule().onMatch(ruleCall);
 
         if (listener != null) {
-            RelOptListener.RuleAttemptedEvent event = new RelOptListener.RuleAttemptedEvent(this，ruleCall.rel(0)，ruleCall，false);
+            RelOptListener.RuleAttemptedEvent event = new RelOptListener.RuleAttemptedEvent(this, ruleCall.rel(0), ruleCall, false);
             listener.ruleAttempted(event);
         }
     }
@@ -458,7 +458,7 @@ public static class FilterIntoJoinRule extends FilterJoinRule {
         Filter filter = call.rel(0);
         Join join = call.rel(1);
         // 到这里已经有明确的线索了，有 filter 有 join
-        perform(call，filter，join);
+        perform(call, filter, join);
     }
 
     /**
@@ -470,7 +470,7 @@ public static class FilterIntoJoinRule extends FilterJoinRule {
      * @param filter filter
      * @param join join
      */
-    protected void perform(RelOptRuleCall call，Filter filter，Join join) {
+    protected void perform(RelOptRuleCall call, Filter filter, Join join) {
         // 步骤一: 判断是否需要下推
         boolean filterPushed = false;
         // 省略部分代码...
@@ -480,19 +480,19 @@ public static class FilterIntoJoinRule extends FilterJoinRule {
 
         // create the new join node referencing the new children and containing its new join filters (if there are any)
         final ImmutableList<RelDataType> fieldTypes = ImmutableList.<RelDataType>builder().addAll(RelOptUtil.getFieldTypeList(leftRel.getRowType())).addAll(RelOptUtil.getFieldTypeList(rightRel.getRowType())).build();
-        final RexNode joinFilter = RexUtil.composeConjunction(rexBuilder，RexUtil.fixUp(rexBuilder，joinFilters，fieldTypes));
+        final RexNode joinFilter = RexUtil.composeConjunction(rexBuilder, RexUtil.fixUp(rexBuilder, joinFilters, fieldTypes));
         // 步骤三: 新建 join 的关系
-        RelNode newJoinRel = join.copy(join.getTraitSet()，joinFilter，leftRel，rightRel，joinType，join.isSemiJoinDone());
+        RelNode newJoinRel = join.copy(join.getTraitSet(), joinFilter, leftRel, rightRel, joinType, join.isSemiJoinDone());
 
         relBuilder.push(newJoinRel);
 
         // Create a project on top of the join if some of the columns have become NOT NULL due to the join-type getting stricter.
         // 在 join 之前创建一个计划，如果一些列由于关联类型变成严格模式变成非空
-        relBuilder.convert(join.getRowType()，false);
+        relBuilder.convert(join.getRowType(), false);
 
         // create a FilterRel on top of the join if needed
         // 如果需要，在 join 之前创建一个过滤表达式
-        relBuilder.filter(RexUtil.fixUp(rexBuilder，aboveFilters，RelOptUtil.getFieldTypeList(relBuilder.peek().getRowType())));
+        relBuilder.filter(RexUtil.fixUp(rexBuilder, aboveFilters, RelOptUtil.getFieldTypeList(relBuilder.peek().getRowType())));
 
         // relBuilder.build() 就是真正的放到 results 里的对象
         call.transformTo(relBuilder.build());
@@ -502,12 +502,12 @@ public static class FilterIntoJoinRule extends FilterJoinRule {
 
 ```
 
-结合上面的 applyRule 方法 关注下 call.results 的变化，![img17](./images/calcite/img17.png) -fireRule(call)
--> ![img19](./images/calcite/img19.png)
+结合上面的 applyRule 方法 关注下 call.results 的变化，![img17](./images/img17.png) -fireRule(call)
+-> ![img19](./images/img19.png)
 
-fireRule 方法我们只列举 onMatch() 的一个实现，以 FilterIntoJoinRule 为例 ![img18](./images/calcite/img18.png)
+fireRule 方法我们只列举 onMatch() 的一个实现，以 FilterIntoJoinRule 为例 ![img18](./images/img18.png)
 
-基于规则优化之后的对比: ![img.png](./images/calcite/img23.png)
+基于规则优化之后的对比: ![img.png](./images/img23.png)
 
 ## 6.4 VolcanoPlanner
 
@@ -555,10 +555,10 @@ select * from A left join C on a.cid = c.id where c.id > 100;
 我们有了原始表信息了，现在如何计算中间表基本信息呢? 比如上面的 c.id > 100 的信息呢?
 
 1. 对于均匀分布的场景，其实只需要知道 id 的最大值最小值就可以取出 id>100 的比例了.
-    1. ![img.png](./images/calcite/img21.png)
+    1. ![img.png](./images/img21.png)
     2. 注: 这里的 id 并不一定是真正的 id，这个字段的关键是要体现均匀分布，比如 1 2 3 4 ... 199 200，这样的 id>100，我们就知道代价是全表的一半
 2. 如果数据分布不均匀呢? 我们可以利用直方图
-    1. ![img_1.png](./images/calcite/img22.png)
+    1. ![img_1.png](./images/img22.png)
     2. cost(>100) / cost * id
 
 #### 3.核心算子实际代价计算
@@ -583,4 +583,4 @@ select * from A left join C on a.cid = c.id where c.id > 100;
 也可以参考另一个工程: [calcite-demo](https://github.com/user757187977/calcite-demo/tree/main/src/main/java/com/lishoupeng/calcite/medium)
 ，这里有详细的计算 成本 优化 中间数据集基本信息 的过程
 
-基于成本优化之后的对比: ![img.png](./images/calcite/img24.png)
+基于成本优化之后的对比: ![img.png](./images/img24.png)
