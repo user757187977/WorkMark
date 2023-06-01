@@ -8,7 +8,7 @@
 * ### [DDD](https://www.notion.so/DDD-192deb50559c4574809f197dd7d6f0cb?pvs=4) （Domain-Driven Design）的前因后果
 * ### [Curator](./src/mark/curator.md) Guava is to Java what Curator is to Zookeeper.
 * ### [Doris](./src/mark/doris/doris.md) 简单易用、高性能和统一的分析数据库
-* ### [MinIO](https://min.io/?utm_term=minio&utm_campaign=MinIO-Search-Google+Build+-+International&utm_source=adwords&utm_medium=ppc&hsa_acc=8976569894&hsa_cam=11154547880&hsa_grp=108939911709&hsa_ad=466333759841&hsa_src=g&hsa_tgt=kwd-301105367935&hsa_kw=minio&hsa_mt=p&hsa_net=adwords&hsa_ver=3&gclid=CjwKCAjwg-GjBhBnEiwAMUvNW1q2cRUQOiZR4i1TVGs0PYnJttHR2186xaMEcMVCt6JqMc7IEjzCPRoCrDQQAvD_BwE) High Performance Object Storage for AI
+* ### [MinIO](./src/mark/minio/minio.md) High Performance Object Storage for AI
 
 ## 资讯类
 
