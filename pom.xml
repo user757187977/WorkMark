@@ -109,6 +109,13 @@
             <version>2.3.4</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.theokanning.openai-gpt3-java/service -->
+        <dependency>
+            <groupId>com.theokanning.openai-gpt3-java</groupId>
+            <artifactId>service</artifactId>
+            <version>0.12.0</version>
+        </dependency>
+
     </dependencies>
 
 
