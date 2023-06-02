@@ -16,8 +16,11 @@
 * ### [AIGC 资讯类](https://github.com/yzfly/awesome-chatgpt-zh)
 * ### [清华 GLM](https://github.com/THUDM/ChatGLM-6B)
 * ### [个人知识库](https://github.com/imartinez/privateGPT)
+* ### [向量数据库](https://www.modb.pro/wiki/2411)
 
 ## [笔记](./src/mark)
+
+`包含比如：java 锁与线程、JVM、Netty、设计模式...`
 
 ## [日常](./日常)
 
@@ -26,4 +29,5 @@
 * ### [其他](./日常)
 
 ## [工作](./工作)
+
 * ### [iterm2 & oh my zsh](https://juejin.cn/post/6844904178075058189)
