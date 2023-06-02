@@ -26,4 +26,4 @@
 * ### [其他](./日常)
 
 ## [工作](./工作)
-* ###[iterm2 & oh my zsh](https://juejin.cn/post/6844904178075058189)
+* ### [iterm2 & oh my zsh](https://juejin.cn/post/6844904178075058189)
