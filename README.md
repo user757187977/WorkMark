@@ -1,6 +1,6 @@
 `写在最前: 仓库仅保存日常工作记录与一些组件 DEMO`
 
-## [算法](./src/main/java/code/README.md)
+## [算法](./src/main/java/code/README.md) 我的 leetcode 笔记
 
 ## [个人技术文献输出](./src/main/java/demo)
 
@@ -18,16 +18,13 @@
 * ### [个人知识库](https://github.com/imartinez/privateGPT)
 * ### [向量数据库](https://www.modb.pro/wiki/2411)
 
-## [笔记](./src/mark)
+## [工作](./工作)
 
-`包含比如：java 锁与线程、JVM、Netty、设计模式...`
+* ### [iterm2 & oh my zsh](https://juejin.cn/post/6844904178075058189)
+* ### [笔记](./src/mark) 包含比如：java 锁与线程、JVM、Netty、设计模式...
 
 ## [日常](./日常)
 
 * ### [读书笔记](./日常/读书笔记/README.md)
 * ### [摄影](./日常/摄影/photography.md)
 * ### [其他](./日常)
-
-## [工作](./工作)
-
-* ### [iterm2 & oh my zsh](https://juejin.cn/post/6844904178075058189)
