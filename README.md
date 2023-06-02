@@ -9,6 +9,7 @@
 * ### [Curator](./src/mark/curator.md) Guava is to Java what Curator is to Zookeeper.
 * ### [Doris](./src/mark/doris/doris.md) 简单易用、高性能和统一的分析数据库
 * ### [MinIO](./src/mark/minio/minio.md) High Performance Object Storage for AI
+* ### [编程命名这件事](./工作/编程命名这件事/编程命名这件事.md)
 
 ## 资讯类
 
@@ -25,3 +26,4 @@
 * ### [其他](./日常)
 
 ## [工作](./工作)
+* ###[iterm2 & oh my zsh](https://juejin.cn/post/6844904178075058189)
