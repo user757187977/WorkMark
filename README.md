@@ -7,10 +7,10 @@
 * ### [Calcite](./src/mark/calcite/calcite.md) The foundation for your next high-performance database.
 * ### [DDD](https://www.notion.so/DDD-192deb50559c4574809f197dd7d6f0cb?pvs=4) （Domain-Driven Design）的前因后果
 * ### [LangChain](https://sleet-platypus-125.notion.site/LangChain-1955e6d3c0834697817a14094b9dcbc0?pvs=4) 最简单入门
+* ### [编程命名这件事](./工作/编程命名这件事/编程命名这件事.md)
 * ### [Curator](./src/mark/curator.md) Guava is to Java what Curator is to Zookeeper.
 * ### [Doris](./src/mark/doris/doris.md) 简单易用、高性能和统一的分析数据库
 * ### [MinIO](./src/mark/minio/minio.md) High Performance Object Storage for AI
-* ### [编程命名这件事](./工作/编程命名这件事/编程命名这件事.md)
 
 ## 资讯类
 
