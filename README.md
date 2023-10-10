@@ -4,7 +4,7 @@
 
 ## [个人技术文献输出](./src/main/java/demo)
 
-* ### [Calcite](./src/mark/calcite/calcite.md) The foundation for your next high-performance database.
+* ### [🌟🌟🌟Calcite](./src/mark/calcite/calcite.md) The foundation for your next high-performance database.
 * ### [DDD](https://www.notion.so/DDD-192deb50559c4574809f197dd7d6f0cb?pvs=4) （Domain-Driven Design）的前因后果
 * ### [LangChain](https://sleet-platypus-125.notion.site/LangChain-1955e6d3c0834697817a14094b9dcbc0?pvs=4) 最简单入门
 * ### [编程命名这件事](./工作/编程命名这件事/编程命名这件事.md)
